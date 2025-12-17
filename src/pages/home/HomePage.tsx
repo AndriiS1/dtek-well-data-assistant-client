@@ -1,20 +1,41 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { fetchAssets } from "../../api/services/AssetService";
 import type { Asset } from "../../types/asset";
 import type { Device } from "../../types/device";
 
 const HomePage = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedDeviceId = searchParams.get("deviceId");
 
   useEffect(() => {
     fetchAssets().then(setAssets);
   }, []);
 
+  const handleDeviceClick = (id: string) => {
+    if (selectedDeviceId === id) {
+      setSearchParams({});
+      return;
+    }
+    setSearchParams({ deviceId: id });
+  };
+
   const getDeviceItem = (device: Device) => {
+    const isSelected = selectedDeviceId === device.id;
+
     return (
       <li
         key={device.id}
-        className="text-sm text-gray-600 flex justify-between"
+        onClick={() => handleDeviceClick(device.id)}
+        className={`
+        text-sm flex justify-between p-2 rounded-md cursor-pointer transition-all
+        ${
+          isSelected
+            ? "bg-yellow-400/10 text-yellow-600 font-medium border-r-4 border-yellow-400"
+            : "text-gray-600 hover:bg-gray-100"
+        }
+      `}
       >
         <span>{device.name}</span>
         <span
@@ -56,9 +77,13 @@ const HomePage = () => {
       </aside>
 
       <main className="flex-1 p-8">
-        <h1 className="text-2xl font-light text-gray-400">
-          Select an asset to view analytics...
-        </h1>
+        {selectedDeviceId === null ? (
+          <h1 className="text-2xl font-light text-gray-400">
+            Select an asset to view analytics...
+          </h1>
+        ) : (
+          <>{selectedDeviceId}</>
+        )}
       </main>
     </div>
   );
