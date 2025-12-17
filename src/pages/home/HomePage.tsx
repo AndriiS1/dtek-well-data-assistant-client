@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { fetchAssets } from "../../api/services/AssetService";
 import type { Asset } from "../../types/asset";
 import type { Device } from "../../types/device";
+import DeviceChart from "./components/DeviceCharts";
 
 const HomePage = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -77,12 +78,12 @@ const HomePage = () => {
       </aside>
 
       <main className="flex-1 p-8">
-        {selectedDeviceId === null ? (
+        {selectedDeviceId ? (
+          <DeviceChart deviceId={selectedDeviceId} />
+        ) : (
           <h1 className="text-2xl font-light text-gray-400">
             Select an asset to view analytics...
           </h1>
-        ) : (
-          <>{selectedDeviceId}</>
         )}
       </main>
     </div>
