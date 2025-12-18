@@ -22,13 +22,13 @@ const DeviceChart = ({ deviceId, from, to }: ChartProps) => {
   const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (from: string, to: string) => {
       const data = await DeviceDataService.getDeviceData(deviceId, from, to);
       setDeviceData(data);
     };
 
     if (from && to) {
-      fetchData();
+      fetchData(from, to);
     }
   }, [deviceId, from, to]);
 
