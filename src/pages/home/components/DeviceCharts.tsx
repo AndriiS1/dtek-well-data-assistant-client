@@ -1,3 +1,4 @@
+import { DeviceDataService } from "@/api/services/DeviceDataService";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -8,20 +9,28 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { fetchDeviceData } from "../../../api/services/DeviceDataService";
 import type { DeviceData } from "../../../types/deviceData";
 import CustomCalendar from "./CustomCalendar";
 
 interface ChartProps {
   deviceId: string;
+  from: string | null;
+  to: string | null;
 }
 
-const DeviceChart = ({ deviceId }: ChartProps) => {
+const DeviceChart = ({ deviceId, from, to }: ChartProps) => {
   const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
 
   useEffect(() => {
-    fetchDeviceData(deviceId).then(setDeviceData);
-  }, [deviceId]);
+    const fetchData = async () => {
+      const data = await DeviceDataService.getDeviceData(deviceId, from, to);
+      setDeviceData(data);
+    };
+
+    if (from && to) {
+      fetchData();
+    }
+  }, [deviceId, from, to]);
 
   return (
     <div>

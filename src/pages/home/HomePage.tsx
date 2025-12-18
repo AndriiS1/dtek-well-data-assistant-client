@@ -1,6 +1,6 @@
+import { AssetService } from "@/api/services/AssetService";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { fetchAssets } from "../../api/services/AssetService";
 import type { Asset } from "../../types/asset";
 import type { Device } from "../../types/device";
 import DeviceChart from "./components/DeviceCharts";
@@ -9,9 +9,16 @@ const HomePage = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedDeviceId = searchParams.get("deviceId");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
   useEffect(() => {
-    fetchAssets().then(setAssets);
+    const fetchData = async () => {
+      const data = await AssetService.getDeviceData();
+      setAssets(data);
+    };
+
+    fetchData();
   }, []);
 
   const handleDeviceClick = (id: string) => {
@@ -79,7 +86,7 @@ const HomePage = () => {
 
       <main className="flex-1 p-8">
         {selectedDeviceId ? (
-          <DeviceChart deviceId={selectedDeviceId} />
+          <DeviceChart deviceId={selectedDeviceId} from={from} to={to} />
         ) : (
           <h1 className="text-2xl font-light text-gray-400">
             Select an asset to view analytics...
