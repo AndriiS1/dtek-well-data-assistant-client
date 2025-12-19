@@ -76,7 +76,7 @@ const HomePage = () => {
     <div className="flex h-[calc(100vh-100px)] bg-gray-50">
       <aside className="w-80 bg-white border-r border-gray-200 overflow-y-auto p-4">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-          Assets & Devices
+          Асети & Пристрої
         </h2>
 
         <div className="space-y-6">
@@ -89,7 +89,7 @@ const HomePage = () => {
           <DeviceChart deviceId={selectedDeviceId} from={from} to={to} />
         ) : (
           <h1 className="text-2xl font-light text-gray-400">
-            Select an asset to view analytics...
+            Виберіть асет для перегляду аналітики...
           </h1>
         )}
       </main>

@@ -17,7 +17,7 @@ export const RequireAuth = ({ children }: Props) => {
         style={{
           display: "flex",
           justifyContent: "center",
-          paddingTop: "10rem",
+          paddingTop: "20rem",
         }}
       >
         <SignIn />
