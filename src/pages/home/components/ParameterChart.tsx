@@ -1,3 +1,4 @@
+import type { ActionItem } from "@/types/actions";
 import ReactECharts from "echarts-for-react";
 
 export interface dateTickMetrics {
@@ -15,9 +16,14 @@ export interface ParameterMetrics {
 interface ChartProps {
   parameterMetric: ParameterMetrics;
   lineColor: string;
+  actions?: ActionItem[];
 }
 
-const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
+const ParameterChart = ({
+  parameterMetric,
+  lineColor,
+  actions: events,
+}: ChartProps) => {
   if (parameterMetric.dateTicks.length === 0) {
     return (
       <div className="h-75 w-full flex items-center justify-center border border-dashed rounded-xl text-gray-400">
@@ -66,35 +72,43 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
       },
       splitLine: { show: false },
     },
-    yAxis: {
-      type: "value",
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: {
-        color: "#9ca3af",
-        fontSize: 11,
-        formatter: (val: number) => val.toFixed(1),
+    yAxis: [
+      {
+        type: "value",
+        scale: true,
+        axisLabel: {
+          color: "#9ca3af",
+          formatter: (val: number) => val.toFixed(1),
+        },
+        splitLine: { lineStyle: { color: "#f0f0f0", type: "dashed" } },
       },
-      splitLine: {
-        lineStyle: { color: "#f0f0f0", type: "dashed" },
+      {
+        type: "value",
+        min: 0,
+        max: 1,
+        show: false,
       },
-      scale: true,
-    },
+    ],
     series: [
       {
         name: parameterMetric.parameterName,
         type: "line",
+        yAxisIndex: 0,
         data: chartData,
         showSymbol: false,
-        sampling: "lttb",
-        lineStyle: {
-          width: 3,
-          color: lineColor,
-        },
+        lineStyle: { width: 3, color: lineColor },
+      },
+      {
+        name: "Events",
+        type: "bar",
+        yAxisIndex: 1,
+        barWidth: 2,
         itemStyle: {
-          color: lineColor,
+          color: "#EF4444",
+          opacity: 0.4,
+          borderRadius: [2, 2, 0, 0],
         },
-        smooth: false,
+        data: events?.map((event) => [event.timestamp, 1, event.title]),
       },
     ],
   };
