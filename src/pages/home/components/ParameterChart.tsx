@@ -1,3 +1,4 @@
+import type { ActionItem } from "@/types/actions";
 import ReactECharts from "echarts-for-react";
 
 export interface dateTickMetrics {
@@ -15,9 +16,23 @@ export interface ParameterMetrics {
 interface ChartProps {
   parameterMetric: ParameterMetrics;
   lineColor: string;
+  actions?: ActionItem[];
 }
 
-const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
+interface TooltipFormatterParams {
+  componentType: "series";
+  seriesName: string;
+  seriesIndex: number;
+  color: string;
+  value: [number | string, number, string?];
+  dataIndex: number;
+}
+
+const ParameterChart = ({
+  parameterMetric,
+  lineColor,
+  actions: events,
+}: ChartProps) => {
   if (parameterMetric.dateTicks.length === 0) {
     return (
       <div className="h-75 w-full flex items-center justify-center border border-dashed rounded-xl text-gray-400">
@@ -49,6 +64,51 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
       shadowColor: "rgba(0,0,0,0.1)",
       shadowOffsetX: 0,
       shadowOffsetY: 4,
+      formatter: (params: unknown) => {
+        const items = params as TooltipFormatterParams[];
+        const date = new Date(items[0].value[0]).toLocaleString("uk-UA", {
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        let html = `<div style="font-weight: 600; margin-bottom: 4px; color: #374151;">${date}</div>`;
+
+        items.forEach((item) => {
+          if (item.seriesName === "Events" && item.value[2]) {
+            const eventTime = new Date(item.value[0]).toLocaleTimeString(
+              "uk-UA",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            );
+
+            html += `
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="display:inline-block;border-radius:2px;width:3px;height:12px;background-color:${item.color};"></span>
+            <b style="color: #EF4444; font-size: 11px; uppercase">Подія (${eventTime}):</b>
+          </div>
+          <div style="padding-left: 9px; margin-top: 2px; color: #4B5563;">${item.value[2]}</div>
+        </div>`;
+          } else if (item.seriesName !== "Events") {
+            html += `
+        <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 4px;">
+          <span>
+            <span style="display:inline-block;margin-right:6px;border-radius:50%;width:8px;height:8px;background-color:${
+              item.color
+            };"></span>
+            ${item.seriesName}
+          </span>
+          <b style="color: #111827;">${item.value[1].toFixed(2)}</b>
+        </div>`;
+          }
+        });
+
+        return html;
+      },
     },
     xAxis: {
       type: "time",
@@ -57,44 +117,61 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
       axisLabel: {
         color: "#9ca3af",
         fontSize: 11,
-        formatter: (value: string) => {
-          return new Date(value).toLocaleDateString("uk-UA", {
-            day: "numeric",
-            month: "short",
-          });
+        formatter: (value: number) => {
+          const date = new Date(value);
+          return date.getHours() === 0 && date.getMinutes() === 0
+            ? date.toLocaleDateString("uk-UA", {
+                day: "numeric",
+                month: "short",
+              })
+            : date.toLocaleTimeString("uk-UA", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
         },
       },
-      splitLine: { show: false },
-    },
-    yAxis: {
-      type: "value",
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: {
-        color: "#9ca3af",
-        fontSize: 11,
-        formatter: (val: number) => val.toFixed(1),
-      },
       splitLine: {
-        lineStyle: { color: "#f0f0f0", type: "dashed" },
+        show: true,
+        lineStyle: { color: "#f9fafb" },
       },
-      scale: true,
     },
+    yAxis: [
+      {
+        type: "value",
+        scale: true,
+        axisLabel: {
+          color: "#9ca3af",
+          formatter: (val: number) => val.toFixed(1),
+        },
+        splitLine: { lineStyle: { color: "#f0f0f0", type: "dashed" } },
+      },
+      {
+        type: "value",
+        min: 0,
+        max: 1,
+        show: false,
+      },
+    ],
     series: [
       {
         name: parameterMetric.parameterName,
         type: "line",
+        yAxisIndex: 0,
         data: chartData,
         showSymbol: false,
-        sampling: "lttb",
-        lineStyle: {
-          width: 3,
-          color: lineColor,
-        },
+        lineStyle: { width: 3, color: lineColor },
+      },
+      {
+        name: "Events",
+        type: "bar",
+        yAxisIndex: 1,
+        barWidth: 2,
         itemStyle: {
-          color: lineColor,
+          color: "#EF4444",
+          opacity: 0.4,
+          borderRadius: [2, 2, 0, 0],
         },
-        smooth: false,
+        data: events?.map((event) => [event.timestamp, 1, event.title]),
       },
     ],
   };

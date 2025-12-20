@@ -15,7 +15,7 @@ const Filters = () => {
             <GroupingIntervals />
           </div>
 
-          <div className="w-px bg-border self-stretch" />
+          <hr className="w-px bg-border self-stretch" />
 
           <div className="flex-1">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground">
