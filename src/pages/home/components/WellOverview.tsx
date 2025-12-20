@@ -1,5 +1,7 @@
 import { WellApiService } from "@/api/services/WellApiService";
+import { WellMetricsApiService } from "@/api/services/WellMetricsApiService";
 import type { Well } from "@/types/well";
+import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useEffect, useState } from "react";
 import CustomCalendar from "./CustomCalendar";
 import WellCharts from "./WellCharts";
@@ -13,15 +15,28 @@ interface ChartProps {
 
 const WellOverview = ({ deviceId, from, to }: ChartProps) => {
   const [well, setWell] = useState<Well | null>(null);
+  const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await WellApiService.getWell(deviceId);
-      setWell(data);
+    const fetchData = async (from: string, to: string) => {
+      const wellData = await WellApiService.getWell(deviceId);
+      const wellParameters = await WellMetricsApiService.filterWellMetrics(
+        deviceId,
+        from,
+        to,
+        wellData?.parameters.map((p) => p.id) ?? [],
+        { type: "Avg", interval: "1d" }
+      );
+      setWell(wellData);
+      setWellParameters(wellParameters);
     };
 
-    fetchData();
+    if (from && to) {
+      fetchData(from, to);
+    }
   }, [deviceId, from, to]);
+
+  console.log(wellParameters);
 
   return (
     <div>
