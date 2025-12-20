@@ -1,12 +1,4 @@
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import ReactECharts from "echarts-for-react";
 
 export interface dateTickMetrics {
   time: string;
@@ -34,35 +26,81 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
     );
   }
 
-  const chartData = parameterMetric.dateTicks.map((tick) => ({
-    time: tick.time,
-    value: parseFloat(tick.value),
-  }));
+  const chartData = parameterMetric.dateTicks.map((tick) => [
+    tick.time,
+    parseFloat(tick.value),
+  ]);
 
-  const formatDate = (tickItem: string) => {
-    const date = new Date(tickItem);
-
-    const datePart = date.toLocaleDateString("uk-UA", {
-      day: "numeric",
-      month: "long",
-    });
-    const timePart = date.toLocaleTimeString("uk-UA", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    return `${datePart} о ${timePart}`;
-  };
-
-  const formatNumber = (value: number) => {
-    return value.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+  const option = {
+    animation: false,
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 40,
+      left: 50,
+      containLabel: true,
+    },
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "#fff",
+      borderRadius: 8,
+      borderWidth: 0,
+      shadowBlur: 10,
+      shadowColor: "rgba(0,0,0,0.1)",
+      shadowOffsetX: 0,
+      shadowOffsetY: 4,
+    },
+    xAxis: {
+      type: "time",
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: "#9ca3af",
+        fontSize: 11,
+        formatter: (value: string) => {
+          return new Date(value).toLocaleDateString("uk-UA", {
+            day: "numeric",
+            month: "short",
+          });
+        },
+      },
+      splitLine: { show: false },
+    },
+    yAxis: {
+      type: "value",
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: "#9ca3af",
+        fontSize: 11,
+        formatter: (val: number) => val.toFixed(1),
+      },
+      splitLine: {
+        lineStyle: { color: "#f0f0f0", type: "dashed" },
+      },
+      scale: true,
+    },
+    series: [
+      {
+        name: parameterMetric.parameterName,
+        type: "line",
+        data: chartData,
+        showSymbol: false,
+        sampling: "lttb",
+        lineStyle: {
+          width: 3,
+          color: lineColor,
+        },
+        itemStyle: {
+          color: lineColor,
+        },
+        smooth: false,
+      },
+    ],
   };
 
   return (
-    <div className="h-auto w-full bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+    <div className="w-full bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
       <div className="mb-4">
         <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
           {parameterMetric.parameterName}
@@ -72,59 +110,11 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
         </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart
-          data={chartData}
-          margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            vertical={false}
-            stroke="#f0f0f0"
-          />
-
-          <XAxis
-            dataKey="time"
-            axisLine={false}
-            tickLine={false}
-            tick={{ fill: "#9ca3af", fontSize: 11 }}
-            tickFormatter={formatDate}
-            minTickGap={30}
-          />
-
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fill: "#9ca3af", fontSize: 11 }}
-            domain={["auto", "auto"]}
-            tickFormatter={(val) => val.toFixed(1)}
-          />
-
-          <Tooltip
-            labelFormatter={formatDate}
-            formatter={(value: number | undefined) => {
-              if (value === undefined) return ["0", "Значення"];
-              return [formatNumber(value), "Значення"];
-            }}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "none",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            }}
-          />
-
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={lineColor}
-            strokeWidth={3}
-            dot={{ r: 3, fill: lineColor, strokeWidth: 0 }}
-            activeDot={{ r: 5, strokeWidth: 0 }}
-            name={parameterMetric.parameterName}
-            animationDuration={1000}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <ReactECharts
+        option={option}
+        style={{ height: "300px", width: "100%" }}
+        opts={{ renderer: "canvas" }}
+      />
     </div>
   );
 };
