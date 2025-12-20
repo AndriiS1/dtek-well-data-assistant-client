@@ -1,4 +1,5 @@
 import { AssetApiService } from "@/api/services/AssetApiService";
+import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
@@ -10,6 +11,18 @@ const HomePage = () => {
   const selectedDeviceId = searchParams.get("deviceId");
   const from = searchParams.get("from");
   const to = searchParams.get("to");
+
+  const { user, isLoaded } = useUser();
+
+  const currentUserEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const allowedEmailsRaw = import.meta.env.VITE_ALLOWED_EMAILS || "";
+  const allowedEmails = allowedEmailsRaw
+    .split(",")
+    .map((e: string) => e.trim());
+
+  const hasEmailAccess: boolean =
+    !!currentUserEmail && allowedEmails.includes(currentUserEmail);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,27 +78,67 @@ const HomePage = () => {
     );
   };
 
-  return (
-    <div className="flex h-[calc(100vh-100px)] bg-gray-50">
-      <aside className="w-80 bg-white border-r border-gray-200 overflow-y-auto p-4">
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-          Асети & Пристрої
-        </h2>
+  const mainContent = () => {
+    return (
+      <div className="flex h-[calc(100vh-100px)] bg-gray-50">
+        <aside className="w-80 bg-white border-r border-gray-200 overflow-y-auto p-4">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+            Асети & Пристрої
+          </h2>
 
-        <div className="space-y-6">
-          {assets.map((asset) => getAssetItem(asset))}
-        </div>
-      </aside>
+          <div className="space-y-6">
+            {assets.map((asset) => getAssetItem(asset))}
+          </div>
+        </aside>
 
-      <main className="flex-1 p-8">
-        {selectedDeviceId ? (
-          <WellOverview deviceId={selectedDeviceId} from={from} to={to} />
-        ) : (
-          <h1 className="text-2xl font-light text-gray-400">
-            Виберіть асет для перегляду аналітики...
+        <main className="flex-1 p-8">
+          {selectedDeviceId ? (
+            <WellOverview deviceId={selectedDeviceId} from={from} to={to} />
+          ) : (
+            <h1 className="text-2xl font-light text-gray-400">
+              Виберіть асет для перегляду аналітики...
+            </h1>
+          )}
+        </main>
+      </div>
+    );
+  };
+
+  const noAccess = () => {
+    return (
+      <div className="flex mt-[30vh] items-center justify-center bg-gray-50">
+        <div className="text-center rounded-2xl bg-white p-8 shadow-md max-w-md">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            🚫 Немає доступу
           </h1>
-        )}
-      </main>
+
+          <p className="mt-3 text-gray-600">
+            У вас немає дозволу переглядати цю сторінку.
+          </p>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Будь ласка зв'яжіться з розробниками, щоб отримати доступ.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const loading = () => {
+    return (
+      <div className="flex mt-[30vh] items-center justify-center ">
+        <div className="text-center max-w-md">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Завантаження...
+          </h1>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      {!isLoaded ? loading() : hasEmailAccess ? mainContent() : noAccess()}
     </div>
   );
 };
