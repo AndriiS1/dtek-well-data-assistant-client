@@ -21,6 +21,10 @@ const WellOverview = ({ deviceId }: ChartProps) => {
 
   const from = searchParams.get(searchParamsConstants.from);
   const to = searchParams.get(searchParamsConstants.to);
+  const aggregationType = searchParams.get(
+    searchParamsConstants.aggregationType
+  );
+  const interval = searchParams.get(searchParamsConstants.interval);
 
   useEffect(() => {
     const fetchWellInfo = async () => {
@@ -33,7 +37,8 @@ const WellOverview = ({ deviceId }: ChartProps) => {
 
   useEffect(() => {
     const fetchMetrics = async () => {
-      if (!from || !to || !well?.parameters) return;
+      if (!from || !to || !well?.parameters || !aggregationType || !interval)
+        return;
 
       const paramIds = well.parameters.map((p) => p.id);
       const metrics = await WellMetricsApiService.filterWellMetrics(
@@ -41,14 +46,14 @@ const WellOverview = ({ deviceId }: ChartProps) => {
         from,
         to,
         paramIds,
-        { type: "Avg", interval: "1d" }
+        { type: aggregationType, interval: interval }
       );
 
       setWellParameters(metrics);
     };
 
     fetchMetrics();
-  }, [deviceId, from, to, well?.parameters]);
+  }, [aggregationType, deviceId, from, interval, to, well.parameters]);
 
   console.log(wellParameters);
 

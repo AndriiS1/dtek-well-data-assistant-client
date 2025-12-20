@@ -29,7 +29,7 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
   if (parameterMetric.dateTicks.length === 0) {
     return (
       <div className="h-75 w-full flex items-center justify-center border border-dashed rounded-xl text-gray-400">
-        No data available for {parameterMetric.parameterName}
+        Немає даних для {parameterMetric.parameterName}
       </div>
     );
   }
@@ -97,7 +97,7 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
             tickLine={false}
             tick={{ fill: "#9ca3af", fontSize: 11 }}
             domain={["auto", "auto"]}
-            tickFormatter={(val) => val.toFixed(1)} // Keeps Y-axis labels clean
+            tickFormatter={(val) => val.toFixed(1)}
           />
 
           <Tooltip
