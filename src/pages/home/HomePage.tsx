@@ -1,5 +1,5 @@
 import { AssetApiService } from "@/api/services/AssetApiService";
-import { useUser } from "@clerk/clerk-react";
+import useUserEmailAccessCheck from "@/hooks/useUserEmailAccessCheck";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
@@ -11,18 +11,7 @@ const HomePage = () => {
   const selectedDeviceId = searchParams.get("deviceId");
   const from = searchParams.get("from");
   const to = searchParams.get("to");
-
-  const { user, isLoaded } = useUser();
-
-  const currentUserEmail = user?.primaryEmailAddress?.emailAddress;
-
-  const allowedEmailsRaw = import.meta.env.VITE_ALLOWED_EMAILS || "";
-  const allowedEmails = allowedEmailsRaw
-    .split(",")
-    .map((e: string) => e.trim());
-
-  const hasEmailAccess: boolean =
-    !!currentUserEmail && allowedEmails.includes(currentUserEmail);
+  const { hasAccess, isLoaded } = useUserEmailAccessCheck();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,9 +126,7 @@ const HomePage = () => {
   };
 
   return (
-    <div>
-      {!isLoaded ? loading() : hasEmailAccess ? mainContent() : noAccess()}
-    </div>
+    <div>{!isLoaded ? loading() : hasAccess ? mainContent() : noAccess()}</div>
   );
 };
 

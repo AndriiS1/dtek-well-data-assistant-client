@@ -5,7 +5,9 @@ import type { WellResponse } from "../types/wellResponse";
 export class WellApiService {
   static async getWell(wellId: string): Promise<Well | null> {
     try {
-      const response = await apiClient.get<WellResponse>(`/Wells/${wellId}`);
+      const response = await apiClient.get<WellResponse>(
+        `/Wells/GetWell:${wellId}`
+      );
 
       const well = response.data;
       return {
