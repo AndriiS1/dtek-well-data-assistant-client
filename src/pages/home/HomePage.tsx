@@ -2,7 +2,7 @@ import { AssetApiService } from "@/api/services/AssetApiService";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
-import DeviceChart from "./components/DeviceCharts";
+import WellOverview from "./components/WellOverview";
 
 const HomePage = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -79,7 +79,7 @@ const HomePage = () => {
 
       <main className="flex-1 p-8">
         {selectedDeviceId ? (
-          <DeviceChart deviceId={selectedDeviceId} from={from} to={to} />
+          <WellOverview deviceId={selectedDeviceId} from={from} to={to} />
         ) : (
           <h1 className="text-2xl font-light text-gray-400">
             Виберіть асет для перегляду аналітики...
