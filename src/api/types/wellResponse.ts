@@ -1,13 +1,13 @@
-export interface Well {
+export interface WellResponse {
   id: string;
   name: string;
   externalId: string;
   assetId: string;
   assetName: string;
-  parameters: Parameter[];
+  parameters: ParameterResponse[];
 }
 
-export interface Parameter {
+export interface ParameterResponse {
   id: string;
   name: string;
   dataType: string;

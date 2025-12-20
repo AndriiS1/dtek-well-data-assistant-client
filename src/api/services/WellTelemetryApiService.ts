@@ -1,17 +1,11 @@
 import apiClient from "@/api/clients";
 import type { DeviceData } from "@/types/deviceData";
-import type { WellResponse } from "../types/assetsResponse";
+import type { AssetWellResponse } from "../types/assetsResponse";
 
-export class DeviceDataService {
-  static async getDeviceData(
-    deviceId: string,
-    from: string,
-    to: string
-  ): Promise<DeviceData> {
+export class WellTelemetryApiService {
+  static async getWell(wellId: string): Promise<DeviceData> {
     try {
-      await apiClient.get<WellResponse>("/devices/history", {
-        params: { deviceId, from, to },
-      });
+      await apiClient.get<AssetWellResponse>(`/Wells/${wellId}`);
     } catch (e) {
       console.log(e);
     }

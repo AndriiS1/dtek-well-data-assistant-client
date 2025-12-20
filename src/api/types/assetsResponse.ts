@@ -6,10 +6,10 @@ export interface AssetResponse {
   id: string;
   name: string;
   parentId: string | null;
-  wells: WellResponse[];
+  wells: AssetWellResponse[];
 }
 
-export interface WellResponse {
+export interface AssetWellResponse {
   id: string;
   name: string;
   externalId: string;

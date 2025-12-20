@@ -1,8 +1,7 @@
-import { AssetService } from "@/api/services/AssetService";
-import type { Well } from "@/types/well";
+import { AssetApiService } from "@/api/services/AssetApiService";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { Asset } from "../../types/asset";
+import type { Asset, AssetWell } from "../../types/asset";
 import DeviceChart from "./components/DeviceCharts";
 
 const HomePage = () => {
@@ -14,7 +13,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await AssetService.getAssets();
+      const data = await AssetApiService.getAssets();
       setAssets(data);
     };
 
@@ -29,7 +28,7 @@ const HomePage = () => {
     setSearchParams({ deviceId: id });
   };
 
-  const getDeviceItem = (device: Well) => {
+  const getDeviceItem = (device: AssetWell) => {
     const isSelected = selectedDeviceId === device.id;
 
     return (

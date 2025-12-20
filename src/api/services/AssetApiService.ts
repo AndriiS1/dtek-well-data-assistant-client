@@ -2,7 +2,7 @@ import apiClient from "@/api/clients";
 import type { Asset } from "@/types/asset";
 import type { AssetsResponse } from "../types/assetsResponse";
 
-export class AssetService {
+export class AssetApiService {
   static async getAssets(): Promise<Asset[]> {
     try {
       const response = await apiClient.get<AssetsResponse>("/Assets");
@@ -11,7 +11,11 @@ export class AssetService {
         id: asset.id,
         name: asset.name,
         parentId: asset.parentId,
-        wells: asset.wells,
+        wells: asset.wells.map((well) => ({
+          id: well.id,
+          name: well.name,
+          externalId: well.externalId,
+        })),
       }));
     } catch (e) {
       console.log(e);

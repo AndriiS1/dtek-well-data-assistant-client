@@ -1,4 +1,4 @@
-import { DeviceDataService } from "@/api/services/DeviceDataService";
+import { WellTelemetryApiService } from "@/api/services/WellTelemetryApiService";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -23,7 +23,7 @@ const DeviceChart = ({ deviceId, from, to }: ChartProps) => {
 
   useEffect(() => {
     const fetchData = async (from: string, to: string) => {
-      const data = await DeviceDataService.getDeviceData(deviceId, from, to);
+      const data = await WellTelemetryApiService.getWell(deviceId, from, to);
       setDeviceData(data);
     };
 
