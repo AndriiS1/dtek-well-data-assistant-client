@@ -1,39 +1,43 @@
 import { Calendar } from "@/components/ui/calendar";
-import { addDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { addDays, endOfDay, startOfDay } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { useSearchParams } from "react-router-dom";
 
-const CustomCalendar = () => {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+interface Props {
+  from: string | null;
+  to: string | null;
+}
+
+const CustomCalendar = ({ from, to }: Props) => {
+  const dateRange: DateRange | undefined = {
+    from: from ? new Date(from) : new Date(),
+    to: to ? new Date(to) : addDays(new Date(), 7),
+  };
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (date?.from && date?.to) {
+  const handleSetDate = (dateRange: DateRange | undefined) => {
+    if (dateRange?.from && dateRange?.to) {
       const currentParams = Object.fromEntries(searchParams.entries());
 
       setSearchParams(
         {
           ...currentParams,
-          from: date.from.toISOString(),
-          to: date.to.toISOString(),
+          from: startOfDay(dateRange.from).toISOString(),
+          to: endOfDay(dateRange.to).toISOString(),
         },
         { replace: true }
       );
     }
-  }, [date, searchParams, setSearchParams]);
+  };
 
   return (
     <Calendar
       autoFocus
       mode="range"
-      defaultMonth={date?.from}
-      selected={date}
-      onSelect={setDate}
+      defaultMonth={dateRange?.from}
+      selected={dateRange}
+      onSelect={handleSetDate}
       numberOfMonths={1}
       className="rounded-md border"
     />

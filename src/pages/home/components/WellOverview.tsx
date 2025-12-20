@@ -3,19 +3,24 @@ import { WellMetricsApiService } from "@/api/services/WellMetricsApiService";
 import type { Well } from "@/types/well";
 import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import CustomCalendar from "./CustomCalendar";
 import WellCharts from "./WellCharts";
 import WellMetadata from "./WellMetadata";
 
 interface ChartProps {
   deviceId: string;
-  from: string | null;
-  to: string | null;
 }
 
-const WellOverview = ({ deviceId, from, to }: ChartProps) => {
+const WellOverview = ({ deviceId }: ChartProps) => {
+  const [searchParams] = useSearchParams();
   const [well, setWell] = useState<Well | null>(null);
   const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
+
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
+
+  console.log(from, to);
 
   useEffect(() => {
     const fetchData = async (from: string, to: string) => {
