@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { Toaster } from "sonner";
 import { RequireAuth } from "./components/requireAuth";
 import AppLayout from "./layouts/appLayout/AppLayout";
 import HomePage from "./pages/home/HomePage";
@@ -10,6 +11,7 @@ export const router = createBrowserRouter([
     element: (
       <RequireAuth>
         <AppLayout />
+        <Toaster richColors closeButton />
       </RequireAuth>
     ),
     errorElement: <NotFoundPage />,
