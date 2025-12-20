@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import Filters from "./Filters/Filters";
 import ParameterChart from "./ParameterChart";
-import WellMetadata from "./WellMetadata";
 
 interface ChartProps {
   deviceId: string;
@@ -58,21 +57,24 @@ const WellOverview = ({ deviceId }: ChartProps) => {
   console.log(wellParameters);
 
   return (
-    <div className="flex flex-col gap-8 p-4">
-      <div className="flex flex-row gap-4 items-start">
-        <Filters />
-        {well && <WellMetadata well={well} />}
+    <div className="flex h-screen w-full overflow-hidden p-4 gap-8 bg-white">
+      <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
+        <div className="flex flex-col gap-6">
+          {wellParameters.map((parameter, index) => (
+            <ParameterChart
+              key={parameter.parameterId}
+              parameterMetric={parameter}
+              lineColor={CHART_COLORS[index % CHART_COLORS.length]}
+            />
+          ))}
+        </div>
       </div>
-      <hr className="border-t border-gray-200" />
-      <div className="flex flex-col gap-6">
-        {wellParameters.map((parameter, index) => (
-          <ParameterChart
-            key={parameter.parameterId}
-            parameterMetric={parameter}
-            lineColor={CHART_COLORS[index % CHART_COLORS.length]}
-          />
-        ))}
-      </div>
+
+      <aside className="shrink-0 border-l border-gray-200 pl-8 overflow-y-auto">
+        <div className="sticky top-0">
+          <Filters />
+        </div>
+      </aside>
     </div>
   );
 };
