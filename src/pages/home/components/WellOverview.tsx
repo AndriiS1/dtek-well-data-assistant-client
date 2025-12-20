@@ -1,5 +1,6 @@
 import { WellApiService } from "@/api/services/WellApiService";
 import { WellMetricsApiService } from "@/api/services/WellMetricsApiService";
+import { CHART_COLORS } from "@/constants/chartColors";
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import type { Well } from "@/types/well";
 import type { ParameterMetrics } from "@/types/wellMetrics";
@@ -52,20 +53,21 @@ const WellOverview = ({ deviceId }: ChartProps) => {
   console.log(wellParameters);
 
   return (
-    <div>
-      <div className="flex flex-row gap-4">
+    <div className="flex flex-col gap-8 p-4">
+      <div className="flex flex-row gap-4 items-start">
         <Filters />
         {well && <WellMetadata well={well} />}
       </div>
-      <WellCharts
-        telemetry={[
-          { time: "08:00", value: 400 },
-          { time: "09:00", value: 300 },
-          { time: "10:00", value: 600 },
-          { time: "11:00", value: 800 },
-          { time: "12:00", value: 500 },
-        ]}
-      />
+      <hr className="border-t border-gray-200" />
+      <div className="flex flex-col gap-6">
+        {wellParameters.map((parameter, index) => (
+          <WellCharts
+            key={parameter.parameterId}
+            parameterMetric={parameter}
+            lineColor={CHART_COLORS[index % CHART_COLORS.length]}
+          />
+        ))}
+      </div>
     </div>
   );
 };
