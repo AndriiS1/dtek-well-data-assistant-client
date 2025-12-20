@@ -29,7 +29,7 @@ const Filters = () => {
   };
 
   return (
-    <div className="flex flex-row items-start gap-4">
+    <div className="flex flex-col items-start gap-4">
       <div className="shrink-0">{GroupingFilters()}</div>
       <div className="grow">
         <CustomCalendar />
