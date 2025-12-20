@@ -53,7 +53,7 @@ const WellOverview = ({ deviceId }: ChartProps) => {
     };
 
     fetchMetrics();
-  }, [aggregationType, deviceId, from, interval, to, well.parameters]);
+  }, [aggregationType, deviceId, from, interval, to, well?.parameters]);
 
   console.log(wellParameters);
 
