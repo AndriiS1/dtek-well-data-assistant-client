@@ -1,10 +1,11 @@
 import { WellApiService } from "@/api/services/WellApiService";
 import { WellMetricsApiService } from "@/api/services/WellMetricsApiService";
+import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import type { Well } from "@/types/well";
 import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import CustomCalendar from "./CustomCalendar";
+import Filters from "./Filters/Filters";
 import WellCharts from "./WellCharts";
 import WellMetadata from "./WellMetadata";
 
@@ -17,10 +18,8 @@ const WellOverview = ({ deviceId }: ChartProps) => {
   const [well, setWell] = useState<Well | null>(null);
   const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
 
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
-
-  console.log(from, to);
+  const from = searchParams.get(searchParamsConstants.from);
+  const to = searchParams.get(searchParamsConstants.to);
 
   useEffect(() => {
     const fetchWellInfo = async () => {
@@ -55,8 +54,8 @@ const WellOverview = ({ deviceId }: ChartProps) => {
   return (
     <div>
       <div className="flex flex-row gap-4">
+        <Filters />
         {well && <WellMetadata well={well} />}
-        <CustomCalendar />
       </div>
       <WellCharts
         telemetry={[

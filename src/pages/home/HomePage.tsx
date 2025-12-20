@@ -1,4 +1,5 @@
 import { AssetApiService } from "@/api/services/AssetApiService";
+import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import useUserEmailAccessCheck from "@/hooks/useUserEmailAccessCheck";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 import { useEffect, useState } from "react";
@@ -9,7 +10,7 @@ import WellOverview from "./components/WellOverview";
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [assets, setAssets] = useState<Asset[]>([]);
-  const selectedDeviceId = searchParams.get("deviceId");
+  const selectedDeviceId = searchParams.get(searchParamsConstants.deviceId);
   const { hasAccess, isLoaded } = useUserEmailAccessCheck();
 
   useEffect(() => {
@@ -28,9 +29,13 @@ const HomePage = () => {
     }
 
     const params = {
-      deviceId: deviceId,
-      from: startOfDay(subDays(new Date(), 7)).toISOString(),
-      to: endOfDay(new Date()).toISOString(),
+      [searchParamsConstants.deviceId]: deviceId,
+      [searchParamsConstants.from]: startOfDay(
+        subDays(new Date(), 7)
+      ).toISOString(),
+      [searchParamsConstants.to]: endOfDay(new Date()).toISOString(),
+      [searchParamsConstants.aggregationType]: "Avg",
+      [searchParamsConstants.interval]: "6h",
     };
 
     setSearchParams(params);
