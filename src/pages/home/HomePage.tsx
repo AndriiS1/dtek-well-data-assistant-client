@@ -138,7 +138,7 @@ const HomePage = () => {
 
   return (
     <div>
-      {!isLoaded ? loading() : !hasEmailAccess ? mainContent() : noAccess()}
+      {!isLoaded ? loading() : hasEmailAccess ? mainContent() : noAccess()}
     </div>
   );
 };
