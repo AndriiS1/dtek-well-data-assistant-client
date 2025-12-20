@@ -45,7 +45,7 @@ export const ClerkThemeProvider = ({
         signIn: {
           start: {
             title: "Вітаємо!",
-            subtitle: "Ввійдіть, щоб отримати доступ до ",
+            subtitle: "Ввійдіть, щоб отримати доступ до функціоналу.",
           },
         },
       }}

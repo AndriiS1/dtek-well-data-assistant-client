@@ -106,7 +106,7 @@ const HomePage = () => {
 
   const noAccess = () => {
     return (
-      <div className="flex mt-[30vh] items-center justify-center bg-gray-50">
+      <div className="flex mt-[30vh] items-center justify-center">
         <div className="text-center rounded-2xl bg-white p-8 shadow-md max-w-md">
           <h1 className="text-2xl font-semibold text-gray-900">
             🚫 Немає доступу
@@ -138,7 +138,7 @@ const HomePage = () => {
 
   return (
     <div>
-      {!isLoaded ? loading() : hasEmailAccess ? mainContent() : noAccess()}
+      {!isLoaded ? loading() : !hasEmailAccess ? mainContent() : noAccess()}
     </div>
   );
 };
