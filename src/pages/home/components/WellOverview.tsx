@@ -30,6 +30,7 @@ const WellOverview = ({ deviceId: wellId }: ChartProps) => {
     const fetchWellInfo = async () => {
       const data = await WellApiService.getWell(wellId);
       setWell(data);
+      setSelectedWellActions([]);
     };
 
     fetchWellInfo();
