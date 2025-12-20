@@ -1,6 +1,6 @@
 import apiClient from "@/api/clients";
-import type { DeviceResponse } from "@/api/types/deviceResponse";
 import type { DeviceData } from "@/types/deviceData";
+import type { WellResponse } from "../types/assetsResponse";
 
 export class DeviceDataService {
   static async getDeviceData(
@@ -9,7 +9,7 @@ export class DeviceDataService {
     to: string
   ): Promise<DeviceData> {
     try {
-      await apiClient.get<DeviceResponse>("/devices/history", {
+      await apiClient.get<WellResponse>("/devices/history", {
         params: { deviceId, from, to },
       });
     } catch (e) {

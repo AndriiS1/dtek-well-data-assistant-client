@@ -1,31 +1,21 @@
 import apiClient from "@/api/clients";
-import type { AssetResponse } from "@/api/types/assetResponse";
 import type { Asset } from "@/types/asset";
+import type { AssetsResponse } from "../types/assetsResponse";
 
 export class AssetService {
-  static async getDeviceData(): Promise<Asset[]> {
+  static async getAssets(): Promise<Asset[]> {
     try {
-      await apiClient.get<AssetResponse>("/devices/history");
+      const response = await apiClient.get<AssetsResponse>("/Assets");
+
+      return response.data.assets.map((asset) => ({
+        id: asset.id,
+        name: asset.name,
+        parentId: asset.parentId,
+        wells: asset.wells,
+      }));
     } catch (e) {
       console.log(e);
+      return [];
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    return [
-      {
-        id: "1",
-        name: "Oil Well Alpha",
-        devices: [
-          { id: "d1", name: "Pressure Sensor", status: "online" },
-          { id: "d2", name: "Flow Meter", status: "online" },
-        ],
-      },
-      {
-        id: "2",
-        name: "Gas Drill Beta",
-        devices: [{ id: "d3", name: "Temperature Gauge", status: "offline" }],
-      },
-    ];
   }
 }

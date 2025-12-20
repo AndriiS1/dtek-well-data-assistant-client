@@ -1,8 +1,8 @@
 import { AssetService } from "@/api/services/AssetService";
+import type { Well } from "@/types/well";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset } from "../../types/asset";
-import type { Device } from "../../types/device";
 import DeviceChart from "./components/DeviceCharts";
 
 const HomePage = () => {
@@ -14,7 +14,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await AssetService.getDeviceData();
+      const data = await AssetService.getAssets();
       setAssets(data);
     };
 
@@ -29,7 +29,7 @@ const HomePage = () => {
     setSearchParams({ deviceId: id });
   };
 
-  const getDeviceItem = (device: Device) => {
+  const getDeviceItem = (device: Well) => {
     const isSelected = selectedDeviceId === device.id;
 
     return (
@@ -46,13 +46,7 @@ const HomePage = () => {
       `}
       >
         <span>{device.name}</span>
-        <span
-          className={
-            device.status === "online" ? "text-green-500" : "text-red-400"
-          }
-        >
-          ●
-        </span>
+        <span className={"text-green-500"}>●</span>
       </li>
     );
   };
@@ -66,7 +60,7 @@ const HomePage = () => {
         </h3>
 
         <ul className="mt-2 ml-4 space-y-2 border-l-2 border-gray-100 pl-4">
-          {asset.devices.map((device) => getDeviceItem(device))}
+          {asset.wells.map((device) => getDeviceItem(device))}
         </ul>
       </div>
     );
