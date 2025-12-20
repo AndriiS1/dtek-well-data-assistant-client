@@ -1,6 +1,6 @@
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import { useSearchParams } from "react-router-dom";
-import RadioButtonList from "./Filters/RadioButtonList";
+import RadioButtonList from "./RadioButtonList";
 
 const GroupingTypes = () => {
   const [searchParams] = useSearchParams();

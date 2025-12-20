@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
-import GroupingTypes from "../GroupingTypes";
 import CustomCalendar from "./CustomCalendar";
 import GroupingIntervals from "./GroupingIntervals";
+import GroupingTypes from "./GroupingTypes";
 
 const Filters = () => {
   const GroupingFilters = () => {

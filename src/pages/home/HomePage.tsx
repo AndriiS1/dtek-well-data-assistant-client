@@ -139,9 +139,13 @@ const HomePage = () => {
     );
   };
 
-  return (
-    <div>{!isLoaded ? loading() : hasAccess ? mainContent() : noAccess()}</div>
-  );
+  const assetsLoaded = assets.length > 0;
+
+  if (!isLoaded || !assetsLoaded) {
+    return loading();
+  }
+
+  return hasAccess ? mainContent() : noAccess();
 };
 
 export default HomePage;
