@@ -1,7 +1,12 @@
-import type { Device } from "./device";
-
 export interface Asset {
   id: string;
   name: string;
-  devices: Device[];
+  parentId: string | null;
+  wells: AssetWell[];
+}
+
+export interface AssetWell {
+  id: string;
+  name: string;
+  externalId: string;
 }
