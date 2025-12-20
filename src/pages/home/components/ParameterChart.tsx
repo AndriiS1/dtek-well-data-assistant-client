@@ -19,6 +19,15 @@ interface ChartProps {
   actions?: ActionItem[];
 }
 
+interface TooltipFormatterParams {
+  componentType: "series";
+  seriesName: string;
+  seriesIndex: number;
+  color: string;
+  value: [number | string, number, string?];
+  dataIndex: number;
+}
+
 const ParameterChart = ({
   parameterMetric,
   lineColor,
@@ -55,6 +64,51 @@ const ParameterChart = ({
       shadowColor: "rgba(0,0,0,0.1)",
       shadowOffsetX: 0,
       shadowOffsetY: 4,
+      formatter: (params: unknown) => {
+        const items = params as TooltipFormatterParams[];
+        const date = new Date(items[0].value[0]).toLocaleString("uk-UA", {
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        let html = `<div style="font-weight: 600; margin-bottom: 4px; color: #374151;">${date}</div>`;
+
+        items.forEach((item) => {
+          if (item.seriesName === "Events" && item.value[2]) {
+            const eventTime = new Date(item.value[0]).toLocaleTimeString(
+              "uk-UA",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            );
+
+            html += `
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="display:inline-block;border-radius:2px;width:3px;height:12px;background-color:${item.color};"></span>
+            <b style="color: #EF4444; font-size: 11px; uppercase">Подія (${eventTime}):</b>
+          </div>
+          <div style="padding-left: 9px; margin-top: 2px; color: #4B5563;">${item.value[2]}</div>
+        </div>`;
+          } else if (item.seriesName !== "Events") {
+            html += `
+        <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 4px;">
+          <span>
+            <span style="display:inline-block;margin-right:6px;border-radius:50%;width:8px;height:8px;background-color:${
+              item.color
+            };"></span>
+            ${item.seriesName}
+          </span>
+          <b style="color: #111827;">${item.value[1].toFixed(2)}</b>
+        </div>`;
+          }
+        });
+
+        return html;
+      },
     },
     xAxis: {
       type: "time",
@@ -63,14 +117,23 @@ const ParameterChart = ({
       axisLabel: {
         color: "#9ca3af",
         fontSize: 11,
-        formatter: (value: string) => {
-          return new Date(value).toLocaleDateString("uk-UA", {
-            day: "numeric",
-            month: "short",
-          });
+        formatter: (value: number) => {
+          const date = new Date(value);
+          return date.getHours() === 0 && date.getMinutes() === 0
+            ? date.toLocaleDateString("uk-UA", {
+                day: "numeric",
+                month: "short",
+              })
+            : date.toLocaleTimeString("uk-UA", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
         },
       },
-      splitLine: { show: false },
+      splitLine: {
+        show: true,
+        lineStyle: { color: "#f9fafb" },
+      },
     },
     yAxis: [
       {
