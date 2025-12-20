@@ -103,8 +103,8 @@ const ParameterChart = ({ parameterMetric, lineColor }: ChartProps) => {
           <Tooltip
             labelFormatter={formatDate}
             formatter={(value: number | undefined) => {
-              if (value === undefined) return ["0", "Value"];
-              return [formatNumber(value), "Value"];
+              if (value === undefined) return ["0", "Значення"];
+              return [formatNumber(value), "Значення"];
             }}
             contentStyle={{
               borderRadius: "8px",
