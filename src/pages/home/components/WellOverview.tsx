@@ -23,23 +23,32 @@ const WellOverview = ({ deviceId }: ChartProps) => {
   console.log(from, to);
 
   useEffect(() => {
-    const fetchData = async (from: string, to: string) => {
-      const wellData = await WellApiService.getWell(deviceId);
-      const wellParameters = await WellMetricsApiService.filterWellMetrics(
+    const fetchWellInfo = async () => {
+      const data = await WellApiService.getWell(deviceId);
+      setWell(data);
+    };
+
+    fetchWellInfo();
+  }, [deviceId]);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      if (!from || !to || !well?.parameters) return;
+
+      const paramIds = well.parameters.map((p) => p.id);
+      const metrics = await WellMetricsApiService.filterWellMetrics(
         deviceId,
         from,
         to,
-        wellData?.parameters.map((p) => p.id) ?? [],
+        paramIds,
         { type: "Avg", interval: "1d" }
       );
-      setWell(wellData);
-      setWellParameters(wellParameters);
+
+      setWellParameters(metrics);
     };
 
-    if (from && to) {
-      fetchData(from, to);
-    }
-  }, [deviceId, from, to]);
+    fetchMetrics();
+  }, [deviceId, from, to, well?.parameters]);
 
   console.log(wellParameters);
 
