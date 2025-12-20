@@ -54,8 +54,6 @@ const WellOverview = ({ deviceId }: ChartProps) => {
     fetchMetrics();
   }, [aggregationType, deviceId, from, interval, to, well?.parameters]);
 
-  console.log(wellParameters);
-
   return (
     <div className="flex h-screen w-full overflow-hidden p-4 gap-8 bg-white">
       <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">

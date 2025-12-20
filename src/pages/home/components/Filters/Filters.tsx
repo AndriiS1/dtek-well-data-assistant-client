@@ -10,7 +10,7 @@ const Filters = () => {
         <CardContent className="flex flex-row gap-8">
           <div className="flex-1">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground">
-              Interval
+              Інтервал
             </h3>
             <GroupingIntervals />
           </div>
@@ -19,7 +19,7 @@ const Filters = () => {
 
           <div className="flex-1">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground">
-              Type
+              Тип агрегації
             </h3>
             <GroupingTypes />
           </div>
