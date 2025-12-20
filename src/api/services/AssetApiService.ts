@@ -5,7 +5,7 @@ import type { AssetsResponse } from "../types/assetsResponse";
 export class AssetApiService {
   static async getAssets(): Promise<Asset[]> {
     try {
-      const response = await apiClient.get<AssetsResponse>("/Assets");
+      const response = await apiClient.get<AssetsResponse>("/Assets/GetAssets");
 
       return response.data.assets.map((asset) => ({
         id: asset.id,
