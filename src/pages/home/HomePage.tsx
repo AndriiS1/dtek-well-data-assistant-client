@@ -1,16 +1,16 @@
 import { AssetApiService } from "@/api/services/AssetApiService";
+import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import useUserEmailAccessCheck from "@/hooks/useUserEmailAccessCheck";
+import { endOfDay, startOfDay, subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
 import WellOverview from "./components/WellOverview";
 
 const HomePage = () => {
-  const [assets, setAssets] = useState<Asset[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedDeviceId = searchParams.get("deviceId");
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const selectedDeviceId = searchParams.get(searchParamsConstants.deviceId);
   const { hasAccess, isLoaded } = useUserEmailAccessCheck();
 
   useEffect(() => {
@@ -22,12 +22,23 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  const handleDeviceClick = (id: string) => {
-    if (selectedDeviceId === id) {
+  const handleDeviceClick = (deviceId: string) => {
+    if (selectedDeviceId === deviceId) {
       setSearchParams({});
       return;
     }
-    setSearchParams({ deviceId: id });
+
+    const params = {
+      [searchParamsConstants.deviceId]: deviceId,
+      [searchParamsConstants.from]: startOfDay(
+        subDays(new Date(), 7)
+      ).toISOString(),
+      [searchParamsConstants.to]: endOfDay(new Date()).toISOString(),
+      [searchParamsConstants.aggregationType]: "Avg",
+      [searchParamsConstants.interval]: "6h",
+    };
+
+    setSearchParams(params);
   };
 
   const getDeviceItem = (device: AssetWell) => {
@@ -82,7 +93,7 @@ const HomePage = () => {
 
         <main className="flex-1 p-8">
           {selectedDeviceId ? (
-            <WellOverview deviceId={selectedDeviceId} from={from} to={to} />
+            <WellOverview deviceId={selectedDeviceId} />
           ) : (
             <h1 className="text-2xl font-light text-gray-400">
               Виберіть асет для перегляду аналітики...

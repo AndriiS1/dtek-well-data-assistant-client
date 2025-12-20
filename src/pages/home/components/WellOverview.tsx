@@ -1,43 +1,78 @@
 import { WellApiService } from "@/api/services/WellApiService";
+import { WellMetricsApiService } from "@/api/services/WellMetricsApiService";
+import { CHART_COLORS } from "@/constants/chartColors";
+import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import type { Well } from "@/types/well";
+import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useEffect, useState } from "react";
-import CustomCalendar from "./CustomCalendar";
-import WellCharts from "./WellCharts";
+import { useSearchParams } from "react-router";
+import Filters from "./Filters/Filters";
+import ParameterChart from "./ParameterChart";
 import WellMetadata from "./WellMetadata";
 
 interface ChartProps {
   deviceId: string;
-  from: string | null;
-  to: string | null;
 }
 
-const WellOverview = ({ deviceId, from, to }: ChartProps) => {
+const WellOverview = ({ deviceId }: ChartProps) => {
+  const [searchParams] = useSearchParams();
   const [well, setWell] = useState<Well | null>(null);
+  const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
+
+  const from = searchParams.get(searchParamsConstants.from);
+  const to = searchParams.get(searchParamsConstants.to);
+  const aggregationType = searchParams.get(
+    searchParamsConstants.aggregationType
+  );
+  const interval = searchParams.get(searchParamsConstants.interval);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchWellInfo = async () => {
       const data = await WellApiService.getWell(deviceId);
       setWell(data);
     };
 
-    fetchData();
-  }, [deviceId, from, to]);
+    fetchWellInfo();
+  }, [deviceId]);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      if (!from || !to || !well?.parameters || !aggregationType || !interval)
+        return;
+
+      const paramIds = well.parameters.map((p) => p.id);
+      const metrics = await WellMetricsApiService.filterWellMetrics(
+        deviceId,
+        from,
+        to,
+        paramIds,
+        { type: aggregationType, interval: interval }
+      );
+
+      setWellParameters(metrics);
+    };
+
+    fetchMetrics();
+  }, [aggregationType, deviceId, from, interval, to, well?.parameters]);
+
+  console.log(wellParameters);
 
   return (
-    <div>
-      <div className="flex flex-row gap-4">
+    <div className="flex flex-col gap-8 p-4">
+      <div className="flex flex-row gap-4 items-start">
+        <Filters />
         {well && <WellMetadata well={well} />}
-        <CustomCalendar />
       </div>
-      <WellCharts
-        telemetry={[
-          { time: "08:00", value: 400 },
-          { time: "09:00", value: 300 },
-          { time: "10:00", value: 600 },
-          { time: "11:00", value: 800 },
-          { time: "12:00", value: 500 },
-        ]}
-      />
+      <hr className="border-t border-gray-200" />
+      <div className="flex flex-col gap-6">
+        {wellParameters.map((parameter, index) => (
+          <ParameterChart
+            key={parameter.parameterId}
+            parameterMetric={parameter}
+            lineColor={CHART_COLORS[index % CHART_COLORS.length]}
+          />
+        ))}
+      </div>
     </div>
   );
 };

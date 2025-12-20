@@ -1,23 +1,58 @@
 import apiClient from "@/api/clients";
-import type { DeviceData } from "@/types/deviceData";
-import type { AssetWellResponse } from "../types/assetsResponse";
+import type { Aggregation } from "@/types/aggregation";
+import type { ParameterMetrics } from "@/types/wellMetrics";
+import type { WellMetricsResponse } from "../types/wellMetricsResponse";
 
 export class WellMetricsApiService {
-  static async getWell(wellId: string): Promise<DeviceData> {
+  static async filterWellMetrics(
+    wellId: string,
+    from: string,
+    to: string,
+    parameterIds: string[],
+    aggregation: Aggregation
+  ): Promise<ParameterMetrics[]> {
     try {
-      await apiClient.get<AssetWellResponse>(`/Wells/${wellId}`);
+      const response = await apiClient.post<WellMetricsResponse>(
+        `/WellMetrics/FilterWellMetrics`,
+        {
+          from: from,
+          to: to,
+          wellId: wellId,
+          parameterIds: parameterIds,
+          aggregation: {
+            interval: aggregation.interval,
+            type: aggregation.type,
+          },
+        }
+      );
+
+      return response.data.series.map((series) => ({
+        wellId: series.wellId,
+        parameterId: series.parameterId,
+        parameterName: series.parameterName,
+        dateTicks: series.dateTicks.map((dateTick) => ({
+          value: dateTick.value,
+          time: dateTick.time,
+        })),
+      }));
     } catch (e) {
       console.log(e);
     }
 
-    return {
-      telemetryData: [
-        { time: "08:00", value: 400 },
-        { time: "09:00", value: 300 },
-        { time: "10:00", value: 600 },
-        { time: "11:00", value: 800 },
-        { time: "12:00", value: 500 },
-      ],
-    };
+    return [];
+  }
+
+  static async getGroupingIntervals(): Promise<string[]> {
+    try {
+      const response = await apiClient.get<string[]>(
+        `/WellMetrics/GetGroupingIntervals`
+      );
+
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
+
+    return [];
   }
 }
