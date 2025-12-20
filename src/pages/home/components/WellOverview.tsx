@@ -7,7 +7,7 @@ import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import Filters from "./Filters/Filters";
-import WellCharts from "./WellCharts";
+import ParameterChart from "./ParameterChart";
 import WellMetadata from "./WellMetadata";
 
 interface ChartProps {
@@ -61,7 +61,7 @@ const WellOverview = ({ deviceId }: ChartProps) => {
       <hr className="border-t border-gray-200" />
       <div className="flex flex-col gap-6">
         {wellParameters.map((parameter, index) => (
-          <WellCharts
+          <ParameterChart
             key={parameter.parameterId}
             parameterMetric={parameter}
             lineColor={CHART_COLORS[index % CHART_COLORS.length]}
