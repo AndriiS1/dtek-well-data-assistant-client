@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { WellActionsCarousel } from "../../home/components/WellActionsCarousel";
 import InsightCharts from "./Charts/InsightCharts";
 import { InsightBriefInfo } from "./InsightBriefInfo";
+import { InsightKpiGrid } from "./InsightkpiGrid";
 
 interface ChartProps {
   insightSlug: string;
@@ -30,33 +31,28 @@ const InsightOverview = ({ insightSlug }: ChartProps) => {
     <div className="flex w-full overflow-hidden p-4 gap-8 bg-white">
       <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
         {insight && (
-          <InsightBriefInfo
-            highlights={insight.highlights}
-            suspicions={insight.suspicions}
-            recommendedActions={insight.recommendedActions}
-          />
-        )}
-        <hr className="my-6 border-t bg-border" />
-        {insight && (
-          <WellActionsCarousel
-            wellId={insight.wellId}
-            from={insight.from}
-            to={insight.to}
-            selectedActions={selectedWellActions}
-            onSelectionChange={setSelectedWellActions}
-          />
-        )}
-
-        <hr className="my-6 border-t bg-border" />
-
-        {insight && (
-          <InsightCharts
-            from={insight.from}
-            to={insight.to}
-            interval={insight.interval}
-            parameterPayloads={insight.payload.parameterPayloads}
-            selectedWellActions={selectedWellActions}
-          />
+          <div>
+            <InsightBriefInfo
+              highlights={insight.highlights}
+              suspicions={insight.suspicions}
+              recommendedActions={insight.recommendedActions}
+            />
+            <InsightKpiGrid kpis={insight.payload.kpis} />
+            <WellActionsCarousel
+              wellId={insight.wellId}
+              from={insight.from}
+              to={insight.to}
+              selectedActions={selectedWellActions}
+              onSelectionChange={setSelectedWellActions}
+            />
+            <InsightCharts
+              from={insight.from}
+              to={insight.to}
+              interval={insight.interval}
+              parameterPayloads={insight.payload.parameterPayloads}
+              selectedWellActions={selectedWellActions}
+            />
+          </div>
         )}
       </div>
     </div>

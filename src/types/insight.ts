@@ -29,6 +29,7 @@ export interface ParameterPayload {
 
 export interface InsightKpisItem {
   parameterId: string;
+  aggregation: string;
   kind: string;
   name: string;
   value: string;

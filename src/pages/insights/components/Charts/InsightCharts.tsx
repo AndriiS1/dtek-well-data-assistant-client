@@ -1,7 +1,7 @@
 import { CHART_COLORS } from "@/constants/chartColors";
 import type { ActionItem } from "@/types/actions";
 import type { ParameterPayload } from "@/types/insight";
-import { Calendar, Clock } from "lucide-react"; // Added for visual context
+import { Calendar, Clock } from "lucide-react";
 import { useState } from "react";
 import MultiParameterChart from "../../../home/components/Charts/MultiParameterChart";
 import ParameterChart from "../../../home/components/Charts/ParameterChart";
@@ -32,7 +32,6 @@ const InsightCharts = ({
     parameterPayloads.find((p) => p.aggregation === selectedAggregation) ||
     parameterPayloads[0];
 
-  // Date formatting helper
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString("uk-UA", {
       day: "2-digit",
@@ -70,8 +69,6 @@ const InsightCharts = ({
             </span>
           </label>
         </div>
-
-        {/* New Metadata & Aggregation Section */}
         <div className="flex items-center gap-4">
           <div className="flex flex-col items-end text-[11px] text-gray-400 font-medium leading-tight">
             <div className="flex items-center gap-1.5">

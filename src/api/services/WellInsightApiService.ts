@@ -60,6 +60,7 @@ export class WellInsightApiService {
             name: kpi.name,
             value: kpi.value,
             change: kpi.change,
+            aggregation: kpi.aggregation,
           })),
           parameterPayloads: data.payload.aggregations.map((agg) => ({
             dataType: agg.dataType,

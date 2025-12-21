@@ -32,6 +32,7 @@ export interface InsightKpisItemResponse {
   kind: string;
   name: string;
   value: string;
+  aggregation: string;
   change: string | null;
 }
 
