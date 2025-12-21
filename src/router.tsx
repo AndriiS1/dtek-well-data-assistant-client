@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { RequireAuth } from "./components/requireAuth";
 import AppLayout from "./layouts/appLayout/AppLayout";
-import AccessGuard from "./pages/components/AccessGuard";
 import HomePage from "./pages/home/HomePage";
 import InsightsPage from "./pages/insights/InsightsPage";
 import NotFoundPage from "./pages/notFound/NotFoundPage";
@@ -20,11 +19,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <AccessGuard>
-            <HomePage />
-          </AccessGuard>
-        ),
+        element: <HomePage />,
       },
       {
         path: "/insights",
