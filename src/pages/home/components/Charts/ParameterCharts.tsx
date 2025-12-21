@@ -29,7 +29,7 @@ const ParameterCharts = ({
   const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isMerged, setIsMerged] = useState(false);
-  const [showSliders, setShowSliders] = useState(true);
+  const [showSliders, setShowSliders] = useState(false);
 
   useEffect(() => {
     const fetchMetrics = async () => {
@@ -58,21 +58,14 @@ const ParameterCharts = ({
     return (
       <div>
         <div className="flex flex-col gap-6">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(isMerged ? 1 : 3)].map((_, i) => (
             <div
               key={i}
               className="w-full h-95 bg-white p-4 rounded-xl border border-gray-100 shadow-sm animate-pulse"
             >
-              {isMerged ? (
-                <div className="h-4 w-32 bg-gray-200 rounded mb-2" />
-              ) : (
-                <>
-                  {" "}
-                  <div className="h-4 w-32 bg-gray-200 rounded mb-2" />
-                  <div className="h-3 w-20 bg-gray-100 rounded mb-6" />
-                  <div className="w-full h-70 bg-gray-50 rounded-lg" />
-                </>
-              )}
+              <div className="h-4 w-32 bg-gray-200 rounded mb-2" />
+              <div className="h-3 w-20 bg-gray-100 rounded mb-6" />
+              <div className="w-full h-70 bg-gray-50 rounded-lg" />
             </div>
           ))}
         </div>

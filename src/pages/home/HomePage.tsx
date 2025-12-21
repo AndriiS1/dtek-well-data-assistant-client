@@ -76,36 +76,32 @@ const HomePage = () => {
     );
   };
 
-  const mainContent = () => {
-    return (
-      <div className="flex bg-gray-50">
-        <aside
-          className="w-80 bg-white border-r border-gray-200 p-4
+  return (
+    <div className="flex bg-gray-50">
+      <aside
+        className="w-80 bg-white border-r border-gray-200 p-4
                         sticky top-0 h-screen overflow-y-auto"
-        >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-            Асети & Пристрої
-          </h2>
+      >
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+          Асети & Пристрої
+        </h2>
 
-          <div className="space-y-6">
-            {assets.map((asset) => getAssetItem(asset))}
-          </div>
-        </aside>
+        <div className="space-y-6">
+          {assets.map((asset) => getAssetItem(asset))}
+        </div>
+      </aside>
 
-        <main className="flex-1 p-8 overflow-y-auto">
-          {selectedDeviceId ? (
-            <WellOverview deviceId={selectedDeviceId} />
-          ) : (
-            <h1 className="text-2xl font-light text-gray-400">
-              Виберіть асет для перегляду аналітики...
-            </h1>
-          )}
-        </main>
-      </div>
-    );
-  };
-
-  return mainContent();
+      <main className="flex-1 p-8 overflow-y-auto">
+        {selectedDeviceId ? (
+          <WellOverview deviceId={selectedDeviceId} />
+        ) : (
+          <h1 className="text-2xl font-light text-gray-400">
+            Виберіть асет для перегляду аналітики...
+          </h1>
+        )}
+      </main>
+    </div>
+  );
 };
 
 export default HomePage;

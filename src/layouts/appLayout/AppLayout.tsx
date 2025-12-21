@@ -21,9 +21,15 @@ const AppLayout = () => {
         >
           DTEK
         </Link>
+        <Link
+          to="/insights"
+          className="hover:text-yellow-400 transition-colors cursor-pointer text-sm font-medium"
+        >
+          Інсайти
+        </Link>
         <SignOutButton signOutOptions={{ redirectUrl: "/" }}>
-          <button className="hover:text-yellow-400 transition-colors cursor-pointer uppercase text-sm font-medium">
-            вийти
+          <button className="hover:text-yellow-400 transition-colors cursor-pointer text-sm font-medium">
+            Вийти
           </button>
         </SignOutButton>
       </nav>

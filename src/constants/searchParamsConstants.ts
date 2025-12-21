@@ -4,4 +4,5 @@ export const searchParamsConstants = {
   deviceId: "deviceId",
   aggregationType: "aggregationType",
   interval: "interval",
+  insight: "insight",
 };
