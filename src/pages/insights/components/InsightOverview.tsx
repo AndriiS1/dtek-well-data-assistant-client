@@ -51,17 +51,14 @@ const InsightOverview = ({ insightSlug }: ChartProps) => {
 
         {insight && (
           <InsightCharts
-            parameterMetrics={insight.payload.parameterPayloads[0].parameters}
+            from={insight.from}
+            to={insight.to}
+            interval={insight.interval}
+            parameterPayloads={insight.payload.parameterPayloads}
             selectedWellActions={selectedWellActions}
           />
         )}
       </div>
-
-      <aside className="shrink-0 border-l border-gray-200 pl-8 ">
-        {/* <div className="sticky top-0">
-          <Filters />
-        </div> */}
-      </aside>
     </div>
   );
 };
