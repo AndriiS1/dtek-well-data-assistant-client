@@ -4,7 +4,7 @@ import type { InsightItem } from "@/types/insights";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import InsightOverview from "./InsightOverview";
+import InsightOverview from "./components/InsightOverview";
 
 const ITEMS_PER_PAGE = 10;
 

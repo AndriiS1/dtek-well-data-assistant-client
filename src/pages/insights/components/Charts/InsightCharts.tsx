@@ -2,8 +2,8 @@ import { CHART_COLORS } from "@/constants/chartColors";
 import type { ActionItem } from "@/types/actions";
 import type { ParameterMetrics } from "@/types/wellMetrics";
 import { useState } from "react";
-import MultiParameterChart from "../home/components/Charts/MultiParameterChart";
-import ParameterChart from "../home/components/Charts/ParameterChart";
+import MultiParameterChart from "../../../home/components/Charts/MultiParameterChart";
+import ParameterChart from "../../../home/components/Charts/ParameterChart";
 
 interface Props {
   parameterMetrics: ParameterMetrics[];
