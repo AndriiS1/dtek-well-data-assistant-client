@@ -53,14 +53,12 @@ export class WellInsightApiService {
   }
 
   static async filterWellInsights(
-    wellId: string,
     pagination: PaginationParams
   ): Promise<Pagination<InsightItem> | null> {
     try {
       const response = await apiClient.post<InsightsResponse>(
         `/WellInsights/FilterWellInsights`,
         {
-          wellId: wellId,
           pagination: {
             limit: pagination.limit,
             offset: pagination.offset,
