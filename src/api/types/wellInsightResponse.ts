@@ -18,7 +18,7 @@ export interface WellInsightResponse {
 
 export interface InsightPayloadResponse {
   aggregations: ParameterPayloadResponse[];
-  kpis: InsightKpisItemResponse[];
+  kpis: InsightKpisResponse[];
 }
 
 export interface ParameterPayloadResponse {
@@ -27,13 +27,17 @@ export interface ParameterPayloadResponse {
   parameters: InsightParameterMetricsResponse[];
 }
 
-export interface InsightKpisItemResponse {
+export interface InsightKpisResponse {
   parameterId: string;
-  kind: string;
   name: string;
-  value: string;
   aggregation: string;
-  change: string | null;
+
+  items: InsightKpisItemResponse[];
+}
+
+export interface InsightKpisItemResponse {
+  kind: string;
+  value: string;
 }
 
 export interface InsightParameterMetricsResponse {

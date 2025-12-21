@@ -11,8 +11,7 @@ export class WellInsightApiService {
     wellId: string,
     from: string,
     to: string,
-    parameterIds: string[],
-    maxMetrics: number
+    parameterIds: string[]
   ): Promise<string | null> {
     try {
       const response = await apiClient.post<WellInsightResponse>(
@@ -22,7 +21,6 @@ export class WellInsightApiService {
           from: from,
           to: to,
           parameterIds: parameterIds,
-          maxMetrics: maxMetrics,
         }
       );
 
@@ -56,11 +54,9 @@ export class WellInsightApiService {
         payload: {
           kpis: data.payload.kpis.map((kpi) => ({
             parameterId: kpi.parameterId,
-            kind: kpi.kind,
             name: kpi.name,
-            value: kpi.value,
-            change: kpi.change,
             aggregation: kpi.aggregation,
+            items: kpi.items.map((i) => ({ kind: i.kind, value: i.value })),
           })),
           parameterPayloads: data.payload.aggregations.map((agg) => ({
             dataType: agg.dataType,

@@ -49,8 +49,7 @@ const WellOverview = ({ deviceId: wellId }: ChartProps) => {
           wellId,
           from,
           to,
-          well?.parameters.map((p) => p.id),
-          1
+          well?.parameters.map((p) => p.id)
         );
 
         navigate(`/insights?insight=${response}`);

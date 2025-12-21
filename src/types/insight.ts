@@ -18,7 +18,7 @@ export interface Insight {
 
 export interface InsightPayload {
   parameterPayloads: ParameterPayload[];
-  kpis: InsightKpisItem[];
+  kpis: InsightKpis[];
 }
 
 export interface ParameterPayload {
@@ -27,11 +27,14 @@ export interface ParameterPayload {
   parameters: ParameterMetrics[];
 }
 
-export interface InsightKpisItem {
+export interface InsightKpis {
   parameterId: string;
   aggregation: string;
-  kind: string;
   name: string;
+  items: InsightKpisItem[];
+}
+
+export interface InsightKpisItem {
+  kind: string;
   value: string;
-  change: string | null;
 }
