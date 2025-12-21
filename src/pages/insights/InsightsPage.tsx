@@ -1,7 +1,7 @@
 import { WellInsightApiService } from "@/api/services/WellInsightApiService";
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import type { InsightItem } from "@/types/insights";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import InsightOverview from "./components/InsightOverview";
@@ -13,6 +13,7 @@ const InsightsPage = () => {
   const [insights, setInsights] = useState<InsightItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const selectedInsightSlug = searchParams.get(searchParamsConstants.insight);
@@ -36,6 +37,16 @@ const InsightsPage = () => {
 
     fetchData();
   }, [currentPage]);
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy link: ", err);
+    }
+  };
 
   const handlePageChange = (newPage: number) => {
     const currentParams = Object.fromEntries(searchParams.entries());
@@ -69,12 +80,24 @@ const InsightsPage = () => {
 
   return (
     <div className="flex h-full bg-gray-50">
-      <aside className="w-80 bg-white border-r border-gray-200  sticky top-0">
-        <div className="p-4 flex-1 overflow-y-auto">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+      <aside className="w-80 bg-white border-r border-gray-200 p-4 flex flex-col h-full overflow-hidden">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
             Інсайти
           </h2>
-
+          <button
+            onClick={handleShare}
+            title="Скопіювати посилання"
+            className={`p-2 rounded-md transition-all ${
+              copied
+                ? "bg-green-50 text-green-600"
+                : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            }`}
+          >
+            {copied ? <Check size={16} /> : <Share2 size={16} />}
+          </button>
+        </div>
+        <div className="p-4 flex-1 overflow-y-auto">
           <ul className="space-y-2">
             {isLoading
               ? ListSkeleton()

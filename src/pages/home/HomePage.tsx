@@ -1,6 +1,7 @@
 import { AssetApiService } from "@/api/services/AssetApiService";
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import { endOfDay, startOfDay, subDays } from "date-fns";
+import { Check, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
@@ -9,6 +10,7 @@ import WellOverview from "./components/WellOverview";
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [copied, setCopied] = useState(false);
   const selectedDeviceId = searchParams.get(searchParamsConstants.deviceId);
 
   useEffect(() => {
@@ -19,6 +21,16 @@ const HomePage = () => {
 
     fetchData();
   }, []);
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy link: ", err);
+    }
+  };
 
   const handleDeviceClick = (deviceId: string) => {
     if (selectedDeviceId === deviceId) {
@@ -77,16 +89,26 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex h-full  bg-gray-50">
-      <aside
-        className="w-80 bg-white border-r border-gray-200 p-4
-                        sticky top-0 overflow-y-auto"
-      >
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-          Асети & Пристрої
-        </h2>
+    <div className="flex h-full bg-gray-50">
+      <aside className="w-80 bg-white border-r border-gray-200 p-4 flex flex-col h-full overflow-hidden">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+            Асети & Пристрої
+          </h2>
+          <button
+            onClick={handleShare}
+            title="Скопіювати посилання"
+            className={`p-2 rounded-md transition-all ${
+              copied
+                ? "bg-green-50 text-green-600"
+                : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            }`}
+          >
+            {copied ? <Check size={16} /> : <Share2 size={16} />}
+          </button>
+        </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 flex-1 overflow-y-auto custom-scrollbar">
           {assets.map((asset) => getAssetItem(asset))}
         </div>
       </aside>
