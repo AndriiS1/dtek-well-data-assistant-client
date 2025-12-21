@@ -38,18 +38,52 @@ export class WellInsightApiService {
 
   static async getWellInsight(insightSlug: string): Promise<Insight | null> {
     try {
-      const response = await apiClient.get(
+      const { data } = await apiClient.get<WellInsightResponse>(
         `/WellInsights/GetWellInsight:${insightSlug}`
       );
 
-      console.log("WellInsightResponse", response);
+      const mappedInsight: Insight = {
+        insightId: data.insightId,
+        wellId: data.wellId,
+        createdAt: data.createdAt,
+        from: data.from,
+        to: data.to,
+        interval: data.interval,
+        title: data.title,
+        slug: data.slug,
+        summary: data.summary,
+        highlights: data.highlights,
+        suspicions: data.suspicions,
+        recommendedActions: data.recommendedActions,
+        payload: {
+          kpis: data.payload.kpis.map((kpi) => ({
+            parameterId: kpi.parameterId,
+            kind: kpi.kind,
+            name: kpi.name,
+            value: kpi.value,
+            change: kpi.change,
+          })),
+          parameterPayloads: data.payload.aggregations.map((agg) => ({
+            dataType: agg.dataType,
+            aggregation: agg.aggregation,
+            parameters: agg.parameters.map((param) => ({
+              wellId: param.wellId,
+              parameterId: param.parameterId,
+              parameterName: param.parameterName,
+              dateTicks: param.dateTicks.map((tick) => ({
+                time: tick.timestamp,
+                value: tick.value,
+              })),
+            })),
+          })),
+        },
+      };
 
-      return null;
+      return mappedInsight;
     } catch (e) {
-      console.log(e);
+      console.error("Error fetching well insight:", e);
+      return null;
     }
-
-    return null;
   }
 
   static async filterWellInsights(

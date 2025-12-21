@@ -1,5 +1,3 @@
-import type { ParameterMetricsResponse } from "./wellMetricsResponse";
-
 export interface WellInsightResponse {
   insightId: string;
   wellId: string;
@@ -19,14 +17,14 @@ export interface WellInsightResponse {
 }
 
 export interface InsightPayloadResponse {
-  parametersPayloads: ParameterPayloadResponse[];
+  aggregations: ParameterPayloadResponse[];
   kpis: InsightKpisItemResponse[];
 }
 
 export interface ParameterPayloadResponse {
   dataType: string;
   aggregation: string;
-  parameters: ParameterMetricsResponse[];
+  parameters: InsightParameterMetricsResponse[];
 }
 
 export interface InsightKpisItemResponse {
@@ -35,4 +33,16 @@ export interface InsightKpisItemResponse {
   name: string;
   value: string;
   change: string | null;
+}
+
+export interface InsightParameterMetricsResponse {
+  wellId: string;
+  parameterId: string;
+  parameterName: string;
+  dateTicks: InsightDateTickMetricsResponse[];
+}
+
+export interface InsightDateTickMetricsResponse {
+  timestamp: string;
+  value: string;
 }
