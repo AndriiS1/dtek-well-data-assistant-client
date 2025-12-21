@@ -40,6 +40,10 @@ export function InsightKpiGrid({ kpis }: Props) {
 
   const activeKpis = groupedKpis[selectedAgg] || [];
 
+  const trimStringNumbers = (text: string) => {
+    return Number(parseFloat(text).toFixed(2));
+  };
+
   return (
     <div className="flex flex-col gap-4 mb-6">
       <div className="flex justify-between items-center">
@@ -66,8 +70,8 @@ export function InsightKpiGrid({ kpis }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {activeKpis.map((kpi) => {
-          const changeValue = kpi.change ? parseFloat(kpi.change) : 0;
-          const isPositive = changeValue > 0;
+          const changeValue = kpi.change ? trimStringNumbers(kpi.change) : 0;
+          const isPositive = Number(changeValue) > 0;
 
           return (
             <Card
@@ -107,7 +111,7 @@ export function InsightKpiGrid({ kpis }: Props) {
                   </p>
                   <div className="flex items-baseline gap-1 mt-1">
                     <h3 className="text-2xl font-bold text-slate-900">
-                      {parseFloat(kpi.value).toLocaleString()}
+                      {trimStringNumbers(kpi.value)}
                     </h3>
                   </div>
                 </div>
