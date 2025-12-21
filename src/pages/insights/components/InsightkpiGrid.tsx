@@ -95,7 +95,9 @@ export function InsightKpiGrid({ kpis }: Props) {
                       className="flex items-baseline justify-between"
                     >
                       <h3 className="text-2xl font-bold text-slate-900 leading-none">
-                        {formatValue(item.value)}
+                        {item.kind === "trend"
+                          ? item.value
+                          : formatValue(item.value)}
                       </h3>
                       <span className="text-xs font-bold text-blue-500/80 bg-blue-50 px-1.5 py-0.5 rounded">
                         {item.kind}
