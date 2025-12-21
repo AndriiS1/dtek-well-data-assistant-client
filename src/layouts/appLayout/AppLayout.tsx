@@ -18,7 +18,7 @@ const AppLayout = () => {
         <div className="flex gap-10 items-center h-full">
           <Link to="/" className="flex items-center">
             <img
-              src="../../../public/Dtek-logo.png"
+              src="/Dtek-logo.png"
               alt="DTEK Logo"
               className="h-10 w-auto object-contain"
             />
