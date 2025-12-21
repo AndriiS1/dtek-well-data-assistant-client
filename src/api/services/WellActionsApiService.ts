@@ -59,6 +59,8 @@ export class WellActionsApiService {
         "/WellInsightActions/FilterWellInsightActions",
         {
           insightId: insightId,
+          from,
+          to,
           pagination: {
             limit: pagination.limit,
             offset: pagination.offset,
