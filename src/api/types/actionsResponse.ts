@@ -1,14 +1,7 @@
-export interface ActionsResponse {
-  actions: ActionResponse;
-}
+import type { PaginationResponse } from "./paginationResponse";
 
-export interface ActionResponse {
-  items: ActionItemResponse[];
-  total: number;
-  offset: number;
-  limit: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+export interface ActionsResponse {
+  actions: PaginationResponse<ActionItemResponse>;
 }
 
 export interface ActionItemResponse {

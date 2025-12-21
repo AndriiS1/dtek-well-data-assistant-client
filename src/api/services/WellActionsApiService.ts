@@ -1,5 +1,6 @@
-import type { Action as Actions } from "@/types/actions";
+import type { ActionItem } from "@/types/actions";
 import type { Pagination } from "@/types/pagination";
+import type { PaginationParams } from "@/types/paginationParams";
 import apiClient from "../clients";
 import type { ActionsResponse } from "../types/actionsResponse";
 
@@ -8,8 +9,8 @@ export class WellActionsApiService {
     wellId: string,
     from: string,
     to: string,
-    pagination: Pagination
-  ): Promise<Actions | null> {
+    pagination: PaginationParams
+  ): Promise<Pagination<ActionItem> | null> {
     try {
       const response = await apiClient.post<ActionsResponse>(
         "/WellActions/FilterWellActions",

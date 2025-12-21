@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import type { Action, ActionItem } from "@/types/actions";
+import type { ActionItem } from "@/types/actions";
+import type { Pagination } from "@/types/pagination";
 import { CheckSquare, ChevronLeft, ChevronRight, Square } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -52,7 +53,7 @@ export function WellActionsCarousel({
   selectedActions,
   onSelectionChange,
 }: WellActionsCarouselProps) {
-  const [data, setData] = useState<Action | null>(null);
+  const [data, setData] = useState<Pagination<ActionItem> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
 
