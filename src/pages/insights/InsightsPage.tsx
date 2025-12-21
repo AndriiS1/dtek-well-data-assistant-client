@@ -12,12 +12,14 @@ const InsightsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [insights, setInsights] = useState<InsightItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const selectedInsightSlug = searchParams.get(searchParamsConstants.insight);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
       const response = await WellInsightApiService.filterWellInsights({
@@ -25,11 +27,11 @@ const InsightsPage = () => {
         offset: offset,
       });
 
-      console.log(response);
       if (response) {
         setInsights(response.items);
         setTotalCount(response.total);
       }
+      setIsLoading(false);
     };
 
     fetchData();
@@ -54,6 +56,17 @@ const InsightsPage = () => {
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
+  const ListSkeleton = () => (
+    <>
+      {[...Array(8)].map((_, i) => (
+        <li key={i} className="p-3 animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-3 bg-gray-100 rounded w-1/2"></div>
+        </li>
+      ))}
+    </>
+  );
+
   return (
     <div className="flex bg-gray-50 h-screen">
       <aside className="w-80 bg-white border-r border-gray-200  sticky top-0">
@@ -63,19 +76,38 @@ const InsightsPage = () => {
           </h2>
 
           <ul className="space-y-2">
-            {insights.map((item) => (
-              <li
-                key={item.slug}
-                onClick={() => handleInsightClick(item.slug)}
-                className={`text-sm flex justify-between p-2 rounded-md cursor-pointer transition-all ${
-                  selectedInsightSlug === item.slug
-                    ? "bg-yellow-400/10 text-yellow-600 font-medium border-r-4 border-yellow-400"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                <span>{item.title || item.slug}</span>
-              </li>
-            ))}
+            {isLoading
+              ? ListSkeleton()
+              : insights.map((item) => (
+                  <li
+                    key={item.slug}
+                    onClick={() => handleInsightClick(item.slug)}
+                    className={`text-sm flex flex-col p-3 rounded-md cursor-pointer transition-all border-r-4 ${
+                      selectedInsightSlug === item.slug
+                        ? "bg-yellow-400/10 text-yellow-700 font-medium border-yellow-400"
+                        : "text-gray-600 hover:bg-gray-100 border-transparent"
+                    }`}
+                  >
+                    <span className="truncate block mb-0.5">
+                      {item.title || item.slug}
+                    </span>
+                    <span
+                      className={`text-[11px] leading-tight ${
+                        selectedInsightSlug === item.slug
+                          ? "text-yellow-600/70"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      {new Date(item.createdAt).toLocaleString("uk-UA", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </li>
+                ))}
           </ul>
         </div>
 
