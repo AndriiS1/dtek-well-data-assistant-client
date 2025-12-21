@@ -5,7 +5,7 @@ import RadioButtonList from "./RadioButtonList";
 const GroupingTypes = () => {
   const [searchParams] = useSearchParams();
   const selectedType = searchParams.get(searchParamsConstants.aggregationType);
-  const groupingTypes: string[] = ["Avg", "Min", "Max", "Sum", "Mode"];
+  const groupingTypes: string[] = ["Avg", "Min", "Max"];
 
   return (
     <RadioButtonList
