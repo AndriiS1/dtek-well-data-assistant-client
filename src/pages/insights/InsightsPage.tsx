@@ -38,6 +38,18 @@ const InsightsPage = () => {
     fetchData();
   }, [currentPage]);
 
+  useEffect(() => {
+    if (!isLoading && insights.length > 0 && !selectedInsightSlug) {
+      const firstInsightSlug = insights[0].slug;
+
+      const currentParams = Object.fromEntries(searchParams.entries());
+      setSearchParams({
+        ...currentParams,
+        [searchParamsConstants.insight]: firstInsightSlug,
+      });
+    }
+  }, [insights, selectedInsightSlug, isLoading, setSearchParams, searchParams]);
+
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
