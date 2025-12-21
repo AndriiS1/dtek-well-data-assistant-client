@@ -1,6 +1,7 @@
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import InsightOverview from "./InsightOverview";
 
 const InsightsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,7 +48,6 @@ const InsightsPage = () => {
       `}
       >
         <span>{insight}</span>
-        <span className={"text-green-500"}>●</span>
       </li>
     );
   };
@@ -69,7 +69,7 @@ const InsightsPage = () => {
 
       <main className="flex-1 p-8 overflow-y-auto">
         {selectedInsightSlug ? (
-          <div />
+          <InsightOverview insightSlug={selectedInsightSlug} />
         ) : (
           <h1 className="text-2xl font-light text-gray-400">
             Виберіть інсайт для перегляду...

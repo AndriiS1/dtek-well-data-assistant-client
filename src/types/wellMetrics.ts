@@ -6,10 +6,10 @@ export interface ParameterMetrics {
   wellId: string;
   parameterId: string;
   parameterName: string;
-  dateTicks: dateTickMetrics[];
+  dateTicks: DateTickMetrics[];
 }
 
-export interface dateTickMetrics {
+export interface DateTickMetrics {
   time: string;
   value: string;
 }
