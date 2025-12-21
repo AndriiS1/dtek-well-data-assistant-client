@@ -11,7 +11,7 @@ interface Props {
 }
 
 const InsightCharts = ({ parameterMetrics, selectedWellActions }: Props) => {
-  const [isMerged, setIsMerged] = useState(false);
+  const [isMerged, setIsMerged] = useState(true);
   const [showSliders, setShowSliders] = useState(false);
 
   return (

@@ -28,7 +28,7 @@ const ParameterCharts = ({
 }: Props) => {
   const [wellParameters, setWellParameters] = useState<ParameterMetrics[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isMerged, setIsMerged] = useState(false);
+  const [isMerged, setIsMerged] = useState(true);
   const [showSliders, setShowSliders] = useState(false);
 
   useEffect(() => {
