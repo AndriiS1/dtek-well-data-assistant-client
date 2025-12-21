@@ -68,7 +68,7 @@ const InsightsPage = () => {
   );
 
   return (
-    <div className="flex bg-gray-50 h-screen">
+    <div className="flex h-full bg-gray-50">
       <aside className="w-80 bg-white border-r border-gray-200  sticky top-0">
         <div className="p-4 flex-1 overflow-y-auto">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">

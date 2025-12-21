@@ -13,9 +13,9 @@ export class WellInsightApiService {
     to: string,
     parameterIds: string[],
     maxMetrics: number
-  ): Promise<WellInsightResponse | null> {
+  ): Promise<string | null> {
     try {
-      const response = await apiClient.post(
+      const response = await apiClient.post<WellInsightResponse>(
         `/WellInsights/GenerateWellInsight`,
         {
           wellId: wellId,
@@ -26,9 +26,7 @@ export class WellInsightApiService {
         }
       );
 
-      console.log("WellInsightResponse", response);
-
-      return response.data;
+      return response.data.slug;
     } catch (e) {
       console.log(e);
     }

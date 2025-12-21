@@ -77,10 +77,10 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex bg-gray-50">
+    <div className="flex h-full  bg-gray-50">
       <aside
         className="w-80 bg-white border-r border-gray-200 p-4
-                        sticky top-0 h-screen overflow-y-auto"
+                        sticky top-0 overflow-y-auto"
       >
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
           Асети & Пристрої
@@ -95,9 +95,11 @@ const HomePage = () => {
         {selectedDeviceId ? (
           <WellOverview deviceId={selectedDeviceId} />
         ) : (
-          <h1 className="text-2xl font-light text-gray-400">
-            Виберіть асет для перегляду аналітики...
-          </h1>
+          <div className="h-full flex items-center justify-center">
+            <h1 className="text-2xl font-light text-gray-400">
+              Виберіть асет для перегляду аналітики...
+            </h1>
+          </div>
         )}
       </main>
     </div>

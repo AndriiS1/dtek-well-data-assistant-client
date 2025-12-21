@@ -7,7 +7,7 @@ const Filters = () => {
   const GroupingFilters = () => {
     return (
       <Card>
-        <CardContent className="flex flex-row gap-8">
+        <CardContent className="flex flex-row gap-4">
           <div className="flex-1">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground">
               Інтервал
@@ -29,9 +29,11 @@ const Filters = () => {
   };
 
   return (
-    <div className="flex flex-col items-start gap-4">
-      <div className="shrink-0">{GroupingFilters()}</div>
-      <div className="grow">
+    <div className="flex flex-col items-center gap-4 w-full">
+      <div className="shrink-0 w-full flex justify-center">
+        {GroupingFilters()}
+      </div>
+      <div className="w-full flex justify-center">
         <CustomCalendar />
       </div>
     </div>
