@@ -74,7 +74,7 @@ const ParameterCharts = ({
         <ParameterChart
           key={parameter.parameterId}
           parameterMetric={parameter}
-          lineColor={CHART_COLORS[index % CHART_COLORS.length]}
+          color={CHART_COLORS[index % CHART_COLORS.length]}
           actions={selectedWellActions}
         />
       ))}

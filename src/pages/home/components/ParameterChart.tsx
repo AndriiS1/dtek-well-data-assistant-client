@@ -15,7 +15,7 @@ export interface ParameterMetrics {
 
 interface ChartProps {
   parameterMetric: ParameterMetrics;
-  lineColor: string;
+  color: string;
   actions?: ActionItem[];
 }
 
@@ -30,7 +30,7 @@ interface TooltipFormatterParams {
 
 const ParameterChart = ({
   parameterMetric,
-  lineColor,
+  color: lineColor,
   actions: events,
 }: ChartProps) => {
   if (parameterMetric.dateTicks.length === 0) {
@@ -55,6 +55,49 @@ const ParameterChart = ({
       left: 50,
       containLabel: true,
     },
+    dataZoom: [
+      {
+        type: "inside",
+        xAxisIndex: 0,
+        filterMode: "filter",
+      },
+      {
+        type: "slider",
+        xAxisIndex: 0,
+        bottom: 10,
+        height: 20,
+        borderColor: "transparent",
+        backgroundColor: "#f9fafb",
+        fillerColor: `${lineColor}22`,
+        selectedDataBackground: {
+          lineStyle: {
+            color: lineColor,
+            width: 1,
+          },
+          areaStyle: {
+            color: lineColor,
+            opacity: 0.1,
+          },
+        },
+        handleStyle: {
+          color: lineColor,
+          borderColor: lineColor,
+        },
+        moveHandleStyle: {
+          color: lineColor,
+          opacity: 0.5,
+        },
+        emphasis: {
+          moveHandleStyle: {
+            color: lineColor,
+          },
+          handleStyle: {
+            color: lineColor,
+          },
+        },
+        labelFormatter: "",
+      },
+    ],
     tooltip: {
       trigger: "axis",
       backgroundColor: "#fff",
