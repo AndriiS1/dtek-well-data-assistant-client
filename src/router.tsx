@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { RequireAuth } from "./components/requireAuth";
 import AppLayout from "./layouts/appLayout/AppLayout";
+import AccessGuard from "./pages/components/AccessGuard";
 import HomePage from "./pages/home/HomePage";
 import NotFoundPage from "./pages/notFound/NotFoundPage";
 
@@ -15,6 +16,15 @@ export const router = createBrowserRouter([
       </RequireAuth>
     ),
     errorElement: <NotFoundPage />,
-    children: [{ index: true, element: <HomePage /> }],
+    children: [
+      {
+        index: true,
+        element: (
+          <AccessGuard>
+            <HomePage />
+          </AccessGuard>
+        ),
+      },
+    ],
   },
 ]);

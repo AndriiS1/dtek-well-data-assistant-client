@@ -4,9 +4,8 @@ import { endOfDay, startOfDay, subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Asset, AssetWell } from "../../types/asset";
-import WellOverview from "./components/WellOverview";
 
-const HomePage = () => {
+const InsightsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [assets, setAssets] = useState<Asset[]>([]);
   const selectedDeviceId = searchParams.get(searchParamsConstants.deviceId);
@@ -94,7 +93,7 @@ const HomePage = () => {
 
         <main className="flex-1 p-8 overflow-y-auto">
           {selectedDeviceId ? (
-            <WellOverview deviceId={selectedDeviceId} />
+            <div />
           ) : (
             <h1 className="text-2xl font-light text-gray-400">
               Виберіть асет для перегляду аналітики...
@@ -108,4 +107,4 @@ const HomePage = () => {
   return mainContent();
 };
 
-export default HomePage;
+export default InsightsPage;
