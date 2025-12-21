@@ -4,8 +4,8 @@ import type { ActionItem } from "@/types/actions";
 import type { Well } from "@/types/well";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import ParameterCharts from "./Charts/ParameterCharts";
 import Filters from "./Filters/Filters";
-import ParameterCharts from "./ParameterCharts";
 import { WellActionsCarousel } from "./WellActionsCarousel";
 
 interface ChartProps {
@@ -30,6 +30,7 @@ const WellOverview = ({ deviceId: wellId }: ChartProps) => {
     const fetchWellInfo = async () => {
       const data = await WellApiService.getWell(wellId);
       setWell(data);
+      setSelectedWellActions([]);
     };
 
     fetchWellInfo();

@@ -1,37 +1,20 @@
 import type { ActionItem } from "@/types/actions";
+import type { ParameterMetrics } from "@/types/wellMetrics";
 import ReactECharts from "echarts-for-react";
-
-export interface dateTickMetrics {
-  time: string;
-  value: string;
-}
-
-export interface ParameterMetrics {
-  wellId: string;
-  parameterId: string;
-  parameterName: string;
-  dateTicks: dateTickMetrics[];
-}
+import { universalTooltipFormatter } from "./utils/chartUtils";
 
 interface ChartProps {
   parameterMetric: ParameterMetrics;
-  lineColor: string;
-  actions?: ActionItem[];
-}
-
-interface TooltipFormatterParams {
-  componentType: "series";
-  seriesName: string;
-  seriesIndex: number;
   color: string;
-  value: [number | string, number, string?];
-  dataIndex: number;
+  actions?: ActionItem[];
+  showSlider: boolean;
 }
 
 const ParameterChart = ({
   parameterMetric,
-  lineColor,
-  actions: events,
+  color,
+  actions,
+  showSlider,
 }: ChartProps) => {
   if (parameterMetric.dateTicks.length === 0) {
     return (
@@ -55,6 +38,50 @@ const ParameterChart = ({
       left: 50,
       containLabel: true,
     },
+    dataZoom: [
+      {
+        type: "inside",
+        xAxisIndex: 0,
+        filterMode: "filter",
+      },
+      {
+        type: "slider",
+        show: showSlider,
+        xAxisIndex: 0,
+        bottom: 10,
+        height: 20,
+        borderColor: "transparent",
+        backgroundColor: "#f9fafb",
+        fillerColor: `${color}22`,
+        selectedDataBackground: {
+          lineStyle: {
+            color: color,
+            width: 1,
+          },
+          areaStyle: {
+            color: color,
+            opacity: 0.1,
+          },
+        },
+        handleStyle: {
+          color: color,
+          borderColor: color,
+        },
+        moveHandleStyle: {
+          color: color,
+          opacity: 0.5,
+        },
+        emphasis: {
+          moveHandleStyle: {
+            color: color,
+          },
+          handleStyle: {
+            color: color,
+          },
+        },
+        labelFormatter: "",
+      },
+    ],
     tooltip: {
       trigger: "axis",
       backgroundColor: "#fff",
@@ -64,51 +91,7 @@ const ParameterChart = ({
       shadowColor: "rgba(0,0,0,0.1)",
       shadowOffsetX: 0,
       shadowOffsetY: 4,
-      formatter: (params: unknown) => {
-        const items = params as TooltipFormatterParams[];
-        const date = new Date(items[0].value[0]).toLocaleString("uk-UA", {
-          day: "numeric",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        let html = `<div style="font-weight: 600; margin-bottom: 4px; color: #374151;">${date}</div>`;
-
-        items.forEach((item) => {
-          if (item.seriesName === "Events" && item.value[2]) {
-            const eventTime = new Date(item.value[0]).toLocaleTimeString(
-              "uk-UA",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-              }
-            );
-
-            html += `
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6;">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="display:inline-block;border-radius:2px;width:3px;height:12px;background-color:${item.color};"></span>
-            <b style="color: #EF4444; font-size: 11px; uppercase">Подія (${eventTime}):</b>
-          </div>
-          <div style="padding-left: 9px; margin-top: 2px; color: #4B5563;">${item.value[2]}</div>
-        </div>`;
-          } else if (item.seriesName !== "Events") {
-            html += `
-        <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 4px;">
-          <span>
-            <span style="display:inline-block;margin-right:6px;border-radius:50%;width:8px;height:8px;background-color:${
-              item.color
-            };"></span>
-            ${item.seriesName}
-          </span>
-          <b style="color: #111827;">${item.value[1].toFixed(2)}</b>
-        </div>`;
-          }
-        });
-
-        return html;
-      },
+      formatter: (params: unknown) => universalTooltipFormatter(params),
     },
     xAxis: {
       type: "time",
@@ -159,7 +142,7 @@ const ParameterChart = ({
         yAxisIndex: 0,
         data: chartData,
         showSymbol: false,
-        lineStyle: { width: 3, color: lineColor },
+        lineStyle: { width: 3, color: color },
       },
       {
         name: "Events",
@@ -171,7 +154,7 @@ const ParameterChart = ({
           opacity: 0.4,
           borderRadius: [2, 2, 0, 0],
         },
-        data: events?.map((event) => [event.timestamp, 1, event.title]),
+        data: actions?.map((event) => [event.timestamp, 1, event.title]),
       },
     ],
   };
