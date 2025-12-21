@@ -63,10 +63,6 @@ export class WellActionsApiService {
             limit: pagination.limit,
             offset: pagination.offset,
           },
-          range: {
-            from: from,
-            to: to,
-          },
         }
       );
 

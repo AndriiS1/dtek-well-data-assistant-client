@@ -40,7 +40,7 @@ const InsightOverview = ({ insightSlug }: ChartProps) => {
             />
             <InsightKpiGrid kpis={insight.payload.kpis} />
             <WellActionsCarousel
-              wellId={insight.wellId}
+              wellId={insight.insightId}
               from={insight.from}
               to={insight.to}
               selectedActions={selectedWellActions}
