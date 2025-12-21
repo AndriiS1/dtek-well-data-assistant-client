@@ -17,6 +17,13 @@ npm install
 
 2. Start development server:
 
+Create `.env` file and fill values (see .env.example):
+VITE_API_BASE_URL - with back-end url
+VITE_CLERK_PUBLISHABLE_KEY - clerk publishable key
+VITE_TOKEN_TEMPLATE - not mandatory. Used as reference for custom JWT template with email claim
+
+3. Start development server:
+
 ```bash
 npm run dev
 ```
