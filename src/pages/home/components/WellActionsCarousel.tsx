@@ -1,4 +1,3 @@
-import { WellActionsApiService } from "@/api/services/WellActionsApiService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,8 +11,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { ActionItem } from "@/types/actions";
 import type { Pagination } from "@/types/pagination";
+import type { PaginationParams } from "@/types/paginationParams";
 import { CheckSquare, ChevronLeft, ChevronRight, Square } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+
+type ActionFetcher<TId extends string = string> = (
+  id: TId,
+  from: string,
+  to: string,
+  pagination: PaginationParams
+) => Promise<Pagination<ActionItem> | null>;
 
 interface WellActionsCarouselProps {
   wellId: string;
@@ -21,6 +28,7 @@ interface WellActionsCarouselProps {
   to: string;
   selectedActions: ActionItem[];
   onSelectionChange: (selectedActions: ActionItem[]) => void;
+  actionFetcher: ActionFetcher;
 }
 
 const LIMIT = 10;
@@ -52,6 +60,7 @@ export function WellActionsCarousel({
   to,
   selectedActions,
   onSelectionChange,
+  actionFetcher,
 }: WellActionsCarouselProps) {
   const [data, setData] = useState<Pagination<ActionItem> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,22 +69,17 @@ export function WellActionsCarousel({
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const result = await WellActionsApiService.getWellActions(
-        wellId,
-        from,
-        to,
-        {
-          limit: LIMIT,
-          offset: offset,
-        }
-      );
+      const result = await actionFetcher(wellId, from, to, {
+        limit: LIMIT,
+        offset: offset,
+      });
       setData(result);
     } catch (error) {
       console.error("Failed to fetch actions:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [wellId, from, to, offset]);
+  }, [actionFetcher, wellId, from, to, offset]);
 
   useEffect(() => {
     fetchData();

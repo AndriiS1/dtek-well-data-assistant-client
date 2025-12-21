@@ -1,3 +1,4 @@
+import { WellActionsApiService } from "@/api/services/WellActionsApiService";
 import { WellApiService } from "@/api/services/WellApiService";
 import { WellInsightApiService } from "@/api/services/WellInsightApiService";
 import { searchParamsConstants } from "@/constants/searchParamsConstants";
@@ -71,6 +72,7 @@ const WellOverview = ({ deviceId: wellId }: ChartProps) => {
             to={to}
             selectedActions={selectedWellActions}
             onSelectionChange={setSelectedWellActions}
+            actionFetcher={WellActionsApiService.getWellActions}
           />
         )}
         <hr className="my-6 border-t bg-border" />

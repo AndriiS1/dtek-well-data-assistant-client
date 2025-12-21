@@ -1,3 +1,4 @@
+import { WellActionsApiService } from "@/api/services/WellActionsApiService";
 import { WellInsightApiService } from "@/api/services/WellInsightApiService";
 import type { ActionItem } from "@/types/actions";
 import type { Insight } from "@/types/insight";
@@ -44,6 +45,7 @@ const InsightOverview = ({ insightSlug }: ChartProps) => {
               to={insight.to}
               selectedActions={selectedWellActions}
               onSelectionChange={setSelectedWellActions}
+              actionFetcher={WellActionsApiService.getWellInsightActions}
             />
             <InsightCharts
               from={insight.from}
